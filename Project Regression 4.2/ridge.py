@@ -1,3 +1,4 @@
+from code import interact
 from initialization import *
 
 
@@ -16,7 +17,8 @@ def ridge_modelcv(x,y,alpha_list,cv,fit_int=False,solv=False):
     result = search.fit(x, y)
     return result, result.best_params_
 
-def ridge_model(x,y,alpha):
-    model = Ridge(alpha=alpha)
+def ridge_model(x,y,alpha,solver='auto',fit_intercept=True):
+    '''return a ridge model given certain parameters'''
+    model = Ridge(alpha=alpha,solver='auto',fit_intercept=fit_intercept)
     model.fit(x,y)
     return model
