@@ -1,7 +1,7 @@
 from initialization import *
-from linear import *
 from ridge import *
 from lasso import *
+from linear import *
 
 print('This program determines the best model and parameters without clearing training data with outliers')
 
