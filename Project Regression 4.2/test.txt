@@ -1,7 +1,0 @@
-mod1
-
-ricardo mod 1
-
-ricardo - Miguel mod2
-
-miguel mod 
