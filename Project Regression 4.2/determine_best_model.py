@@ -3,6 +3,7 @@ from model_ridge import *
 from model_lasso import *
 from model_linear import *
 
+
 alpha_list = np.linspace(0.001,3,50)
 
 def determine_best_model(x_imp,y_imp,N_val,Centered=False):
@@ -29,11 +30,12 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
 
     mse_lin = np.mean(mse_list)
 
-    print('Calculating best alpha for ridge model ....(trange unreliable)')
+    print('Calculating best alpha for ridge model ....')
     best_ridalpha_lis = []
     for i in trange(N_val):
         ridcv_model = ridge_modelcv(x_trn[i],y_train[i],alpha_list,None,fit_int=False,solv=False)
-        best_ridalpha_lis.append(ridcv_model[1]['alpha'])
+        # best_ridalpha_lis.append(ridcv_model[1]['alpha'])
+        best_ridalpha_lis.append(ridcv_model[1])
 
     best_ridalpha = np.mean(best_ridalpha_lis)
     print(best_ridalpha,"±",np.std(best_ridalpha_lis))
@@ -51,7 +53,8 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     best_lasalpha_lis = []
     for i in trange(N_val):
         lascv_model = lasso_modelcv(x_trn[i],y_train[i],alpha_list,cv=None,fit_int=False)
-        best_lasalpha_lis.append(lascv_model[1]['alpha'])
+        # best_lasalpha_lis.append(lascv_model[1]['alpha'])
+        best_lasalpha_lis.append(lascv_model[1])
 
     best_lasalpha = np.mean(best_lasalpha_lis)
     print(best_lasalpha,"±",np.std(best_lasalpha_lis))

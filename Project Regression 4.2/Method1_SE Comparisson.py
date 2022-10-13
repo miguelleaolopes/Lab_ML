@@ -25,7 +25,7 @@ plt.title('Squared Error vs Data Index', fontsize=14)
 plt.ylabel('SE', fontsize=14)
 plt.xlabel('Data Index', fontsize=14)
 plt.grid(True)
-plt.show()
+# plt.show()
 
 
 for i in range(len(x_import)):
