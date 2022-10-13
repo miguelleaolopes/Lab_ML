@@ -25,3 +25,4 @@ n_outliers = np.shape(x_import)[0] - np.shape(x_import_wo)[0]
 print('There are',len(out_list),'outliers.\n',out_list)
 print(n_outliers)
 
+determine_best_model(x_import_wo,y_import_wo,500)
