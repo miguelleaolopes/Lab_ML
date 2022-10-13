@@ -29,8 +29,8 @@ cooks = influence.cooks_distance
 threshold_cook = 4/np.shape(x_import)[0]/2.2
 indices = [i for i,v in enumerate(cooks[0]) if v > threshold_cook]
 
-print(" There are",np.shape(indices), "outliars:")
-print("Indices: ",indices)
+print(" There are",np.shape(indices)[0], "outliers:\n",indices)
+
 
 cooks_filter1 = np.delete(cooks[0],indices,axis=0)
 x_import_wo_cook = np.delete(x_import,indices,axis=0)
@@ -43,7 +43,7 @@ cooks_out1 = []
 for i in indices:
     cooks_out1.append(cooks[0][i])
 
-print("Values of Outliars:",cooks_out1)
+# print("Values of Outliars:",cooks_out1)
 
 plt.plot(list(range(np.shape(cooks)[1])), cooks[0])
 plt.hlines(threshold_cook,0,np.shape(x_import)[0], color='red')
