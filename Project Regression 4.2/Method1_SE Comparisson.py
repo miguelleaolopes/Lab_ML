@@ -16,7 +16,7 @@ for i in range(len(x_import)):
     SE_list.append((y_import[i]-y_pred[i])**2)
 
 sigma = np.std(SE_list)
-threshold = np.mean(SE_list) + 0.05*sigma
+threshold = np.mean(SE_list) + 0.1*sigma
 
 
 plt.plot(index_list, SE_list, color='blue', marker='o')
@@ -38,5 +38,5 @@ x_import_wo = np.delete(x_import, out_list, axis=0)
 y_import_wo = np.delete(y_import, out_list, axis=0)
 
 
-alpha_list = np.linspace(0.005,10,50)
-determine_best_model(x_import_wo,y_import_wo,500)
+alpha_list = np.linspace(0.005,10,40)
+determine_best_model(x_import_wo,y_import_wo,500,True)

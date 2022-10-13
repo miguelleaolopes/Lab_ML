@@ -70,4 +70,4 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
 
 
 # print('This program determines the best model and parameters without clearing training data with outliers')
-determine_best_model(x_import,y_import,500,True)
+# determine_best_model(x_import,y_import,500,True)
