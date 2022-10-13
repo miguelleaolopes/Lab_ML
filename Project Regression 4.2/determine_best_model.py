@@ -9,7 +9,7 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     '''This function tests all models'''
     split_data(x_imp,y_imp,N_val,0.2)
 
-    if Centered:
+    if not Centered:
         x_trn = x_train
         x_tst = x_test
     else:
