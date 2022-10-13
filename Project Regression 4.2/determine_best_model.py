@@ -37,7 +37,7 @@ def determine_best_model(x_imp,y_imp,N_val):
     print('Calculating best alpha for lasso model ....')
     best_lasalpha_lis = []
     for i in trange(N_val):
-        lascv_model = lasso_modelcv(x_train[i],y_train[i],np.linspace(0.001,0.1,20),cv=None,fit_int=False)
+        lascv_model = lasso_modelcv(x_train[i],y_train[i],np.linspace(0.001,1,40),cv=None,fit_int=False)
         best_lasalpha_lis.append(lascv_model[1]['alpha'])
 
     best_lasalpha = np.mean(best_lasalpha_lis)
