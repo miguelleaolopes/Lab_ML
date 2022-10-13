@@ -1,4 +1,5 @@
 from model_linear import *
+from determine_best_model import *
 from yellowbrick.base import Visualizer
 from yellowbrick.regressor import CooksDistance
 from yellowbrick.regressor import ResidualsPlot
@@ -35,8 +36,8 @@ cooks_filter1 = np.delete(cooks[0],indices,axis=0)
 x_import_wo_cook = np.delete(x_import,indices,axis=0)
 y_import_wo_cook = np.delete(y_import,indices,axis=0)
 
-print(np.shape(x_import_wo_cook))
-print(np.shape(y_import_wo_cook))
+# print(np.shape(x_import_wo_cook))
+# print(np.shape(y_import_wo_cook))
 
 cooks_out1 = []
 for i in indices:
@@ -99,3 +100,5 @@ plt.show()
 # visualizer_residuals = ResidualsPlot(models,qqplot=True, hist=False,)
 # visualizer_residuals.fit(x_import, y_import[:,0])
 # visualizer_residuals.show()
+
+determine_best_model(x_import_wo_cook,y_import_wo_cook,500)
