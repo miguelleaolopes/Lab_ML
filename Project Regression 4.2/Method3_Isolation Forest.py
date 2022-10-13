@@ -1,8 +1,8 @@
 from sklearn.ensemble import IsolationForest
 from initialization import *
-from ridge import *
-from lasso import *
-from linear import *
+from model_ridge import *
+from model_lasso import *
+from model_linear import *
 from determine_best_model import determine_best_model
 
 
@@ -21,8 +21,6 @@ for i in range(len(mask)):
 
 
 
-n_outliers = np.shape(x_import)[0] - np.shape(x_import_wo)[0]
 print('There are',len(out_list),'outliers.\n',out_list)
-print(n_outliers)
 
 determine_best_model(x_import_wo,y_import_wo,500)

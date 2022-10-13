@@ -1,4 +1,3 @@
-from code import interact
 from initialization import *
 
 

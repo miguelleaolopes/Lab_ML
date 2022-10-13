@@ -1,7 +1,7 @@
 from initialization import *
-from ridge import *
-from lasso import *
-from linear import *
+from model_ridge import *
+from model_lasso import *
+from model_linear import *
 
 modelwout = linear_model(x_import,y_import)
 
