@@ -26,7 +26,8 @@ summary_influence = influence.summary_frame()
 cooks = influence.cooks_distance
 
 # Indices of points with the distance above a certain threshold I>4/n
-indices = [i for i,v in enumerate(cooks[0]) if v > 4/np.shape(x_import)[0]]
+threshold_cook = 4/np.shape(x_import)[0]/2.2
+indices = [i for i,v in enumerate(cooks[0]) if v > threshold_cook]
 
 print(" There are",np.shape(indices), "outliars:")
 print("Indices: ",indices)
@@ -44,10 +45,11 @@ for i in indices:
 
 print("Values of Outliars:",cooks_out1)
 
-# plt.plot(list(range(np.shape(cooks)[1])), cooks[0])
-# plt.xlabel('x')
-# plt.ylabel('Cooks Distance')
-# plt.show()
+plt.plot(list(range(np.shape(cooks)[1])), cooks[0])
+plt.hlines(threshold_cook,0,np.shape(x_import)[0], color='red')
+plt.xlabel('x')
+plt.ylabel('Cooks Distance')
+plt.show()
 
 
 #######################################################
@@ -87,12 +89,12 @@ print("Values of Outliars:",cooks_out1)
 
 ################################################
 
-cook_linear_model = linear_model(x_import,y_import)
-influence = cook_linear_model
+# cook_linear_model = linear_model(x_import,y_import)
+# influence = cook_linear_model
 
-visualizer = CooksDistance()
-visualizer.fit(Xbig_import, y_import[:,0])
-visualizer.show()
+# visualizer = CooksDistance()
+# visualizer.fit(Xbig_import, y_import[:,0])
+# visualizer.show()
 
 # models = LinearRegression()
 # visualizer_residuals = ResidualsPlot(models,qqplot=True, hist=False,)
