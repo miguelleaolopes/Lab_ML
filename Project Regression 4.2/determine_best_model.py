@@ -1,7 +1,7 @@
 from initialization import *
-from ridge import *
-from lasso import *
-from linear import *
+from model_ridge import *
+from model_lasso import *
+from model_linear import *
 
 def determine_best_model(x_imp,y_imp,N_val):
 
@@ -57,5 +57,5 @@ def determine_best_model(x_imp,y_imp,N_val):
     print('MSE ridge:', mse_rid)
     print('MSE lasso:', mse_las)
 
-print('This program determines the best model and parameters without clearing training data with outliers')
-determine_best_model(x_import,y_import,500)
+# print('This program determines the best model and parameters without clearing training data with outliers')
+# determine_best_model(x_import,y_import,500)
