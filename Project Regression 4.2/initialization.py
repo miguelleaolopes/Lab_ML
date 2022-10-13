@@ -15,10 +15,10 @@ y_import = np.load("data/Ytrain_Regression2.npy")
 x_train,y_train,x_test,y_test, x_train_s, x_test_s = [], [], [], [], [], []
 
 # Essential functions
-def split_data(N_list,test_size):
+def split_data(x,y,N_list,test_size):
 
     for i in range(N_list):
-        result = train_test_split(x_import, y_import, test_size=test_size)
+        result = train_test_split(x, y, test_size=test_size)
         x_train.append(result[0])
         x_test.append(result[1])
         y_train.append(result[2])
