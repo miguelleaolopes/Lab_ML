@@ -15,14 +15,16 @@ y_pred = modelwout.predict(x_import)
 for i in range(len(x_import)):
     SE_list.append((y_import[i]-y_pred[i])**2)
 
-sigma = np.mean(SE_list)
-threshold = 3*sigma
+sigma = np.std(SE_list)
+threshold = np.mean(SE_list) + 0.1*sigma
+print(np.mean(SE_list))
+print (sigma)
 
 plt.plot(index_list, SE_list, color='blue', marker='o')
 plt.hlines(threshold,index_list[0],index_list[-1], color='red')
 plt.title('Squared Error vs Data Index', fontsize=14)
-plt.xlabel('SE', fontsize=14)
-plt.ylabel('Data Index', fontsize=14)
+plt.ylabel('SE', fontsize=14)
+plt.xlabel('Data Index', fontsize=14)
 plt.grid(True)
 plt.show()
 

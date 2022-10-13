@@ -3,13 +3,13 @@ from model_ridge import *
 from model_lasso import *
 from model_linear import *
 
-alpha_list = np.linspace(0.001,1,40)
+alpha_list = np.linspace(0.005,3,50)
 
-def determine_best_model(x_imp,y_imp,N_val,Standarization=False):
+def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     '''This function tests all models'''
     split_data(x_imp,y_imp,N_val,0.2)
 
-    if Standarization:
+    if Centered:
         x_trn = x_train
         x_tst = x_test
     else:
@@ -70,4 +70,4 @@ def determine_best_model(x_imp,y_imp,N_val,Standarization=False):
 
 
 # print('This program determines the best model and parameters without clearing training data with outliers')
-# determine_best_model(x_import,y_import,500)
+# determine_best_model(x_import,y_import,500,True)
