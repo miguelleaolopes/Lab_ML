@@ -1,4 +1,4 @@
-from linear import *
+from model_linear import *
 from yellowbrick.base import Visualizer
 from yellowbrick.regressor import CooksDistance
 from yellowbrick.regressor import ResidualsPlot
