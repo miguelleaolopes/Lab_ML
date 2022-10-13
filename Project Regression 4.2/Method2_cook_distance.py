@@ -102,4 +102,4 @@ plt.show()
 # visualizer_residuals.show()
 
 alpha_list = np.linspace(0.001,1,50)
-determine_best_model(x_import_wo_cook,y_import_wo_cook,500)
+determine_best_model(x_import_wo_cook,y_import_wo_cook,500,alpha_list)

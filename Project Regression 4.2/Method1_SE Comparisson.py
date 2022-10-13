@@ -38,5 +38,6 @@ x_import_wo = np.delete(x_import, out_list, axis=0)
 y_import_wo = np.delete(y_import, out_list, axis=0)
 
 
-# alpha_list = np.linspace(0.005,10,40)
-determine_best_model(x_import_wo,y_import_wo,1000)
+alpha_list = np.linspace(0.001,2,50)
+determine_best_model(x_import_wo,y_import_wo,100,alpha_list)
+# It also works with just this and much faster
