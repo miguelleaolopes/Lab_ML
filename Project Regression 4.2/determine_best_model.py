@@ -10,9 +10,11 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     split_data(x_imp,y_imp,N_val,0.2)
 
     if not Centered:
+        print('Not centered features')
         x_trn = x_train
         x_tst = x_test
     else:
+        print('Centered features')
         x_trn = x_train_s
         x_tst = x_test_s
 
@@ -21,8 +23,8 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     print('Calculating mse for linear model ....')
     mse_list = []
     for i in trange(N_val):
-        lin_model = linear_model(x_trn[i],y_train[i])
-        y_pred_lin = lin_model.predict(x_tst[i])
+        lin_model = linear_model(x_train[i],y_train[i]) #For linear we do not center
+        y_pred_lin = lin_model.predict(x_test[i])
         mse_list.append(mean_squared_error(y_pred_lin,y_test[i]))
 
     mse_lin = np.mean(mse_list)
@@ -41,7 +43,7 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     for i in trange(N_val):
         rid_model = ridge_model(x_trn[i],y_train[i],best_ridalpha,solver='auto',fit_intercept=True)
         y_pred_rid = rid_model.predict(x_tst[i])
-        mse_list.append(mean_squared_error(y_pred_lin,y_test[i]))
+        mse_list.append(mean_squared_error(y_pred_rid,y_test[i]))
 
     mse_rid = np.mean(mse_list)
 
