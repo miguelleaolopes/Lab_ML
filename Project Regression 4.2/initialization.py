@@ -25,6 +25,3 @@ def split_data(x,y,N_list,test_size):
 
         x_train_s.append(StandardScaler().fit_transform(result[0]))
         x_test_s.append(StandardScaler().fit_transform(result[1]))
-
-        x_train_s.append(StandardScaler().fit_transform(result[0]))
-        x_test_s.append(StandardScaler().fit_transform(result[1]))
