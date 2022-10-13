@@ -3,7 +3,7 @@ from model_ridge import *
 from model_lasso import *
 from model_linear import *
 
-alpha_list = np.linspace(0.005,3,50)
+alpha_list = np.linspace(0.001,3,50)
 
 def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     '''This function tests all models'''
@@ -29,7 +29,7 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
 
     print('Calculating best alpha for ridge model ....(trange unreliable)')
     best_ridalpha_lis = []
-    for i in range(N_val):
+    for i in trange(N_val):
         ridcv_model = ridge_modelcv(x_trn[i],y_train[i],alpha_list,None,fit_int=False,solv=False)
         best_ridalpha_lis.append(ridcv_model[1]['alpha'])
 
@@ -41,7 +41,7 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
     for i in trange(N_val):
         rid_model = ridge_model(x_trn[i],y_train[i],best_ridalpha,solver='auto',fit_intercept=True)
         y_pred_rid = rid_model.predict(x_tst[i])
-        mse_list.append(mean_squared_error(y_pred_lin,y_test[i]))
+        mse_list.append(mean_squared_error(y_pred_rid,y_test[i]))
 
     mse_rid = np.mean(mse_list)
 

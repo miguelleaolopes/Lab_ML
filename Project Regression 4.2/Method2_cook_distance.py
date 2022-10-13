@@ -3,7 +3,7 @@ from determine_best_model import *
 from yellowbrick.base import Visualizer
 from yellowbrick.regressor import CooksDistance
 from yellowbrick.regressor import ResidualsPlot
-import scipy as sp
+
 import statsmodels.api as sm
 
 
@@ -25,7 +25,7 @@ summary_influence = influence.summary_frame()
 #obtain Cook's distance for each observation
 cooks = influence.cooks_distance
 
-# Indices of points with the distance above a certain threshold I>4/n
+# Indices of points with the distance above a certain threshold I>4/n(/2.2)
 threshold_cook = 4/np.shape(x_import)[0]/2.2
 indices = [i for i,v in enumerate(cooks[0]) if v > threshold_cook]
 
@@ -101,4 +101,5 @@ plt.show()
 # visualizer_residuals.fit(x_import, y_import[:,0])
 # visualizer_residuals.show()
 
+alpha_list = np.linspace(0.001,1,50)
 determine_best_model(x_import_wo_cook,y_import_wo_cook,500)
