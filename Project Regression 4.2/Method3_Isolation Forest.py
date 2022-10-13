@@ -23,4 +23,5 @@ for i in range(len(mask)):
 
 print('There are',len(out_list),'outliers.\n',out_list)
 
-determine_best_model(x_import_wo,y_import_wo,500)
+alpha_list = np.linspace(0.001,5,50)
+determine_best_model(x_import_wo,y_import_wo,500,alpha_list)
