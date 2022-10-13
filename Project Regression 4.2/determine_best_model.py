@@ -19,7 +19,7 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
         x_trn = x_train_s
         x_tst = x_test_s
 
-
+    # _________________________________________________________________________________
 
     print('Calculating mse for linear model ....')
     mse_list = []
@@ -29,6 +29,15 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
         mse_list.append(mean_squared_error(y_pred_lin,y_test[i]))
 
     mse_lin = np.mean(mse_list)
+    mse_lin_var = np.var(mse_list)
+    # plt.scatter(list(range(np.shape(mse_list)[0])),mse_list)
+    # plt.title('Squared Error vs Data Index', fontsize=14)
+    # plt.xlabel('x')
+    # plt.ylabel('Cooks Distance')
+    # plt.show()
+    print('MSE linear:', mse_lin,"±",mse_lin_var)
+
+    # _________________________________________________________________________________
 
     print('Calculating best alpha for ridge model ....')
     best_ridalpha_lis = []
@@ -48,6 +57,10 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
         mse_list.append(mean_squared_error(y_pred_rid,y_test[i]))
 
     mse_rid = np.mean(mse_list)
+    mse_rid_var = np.var(mse_list)
+    print('MSE ridge:', mse_rid,"±",mse_rid_var)
+
+    # _________________________________________________________________________________
 
     print('Calculating best alpha for lasso model ....')
     best_lasalpha_lis = []
@@ -67,11 +80,13 @@ def determine_best_model(x_imp,y_imp,N_val,Centered=False):
         mse_list.append(mean_squared_error(y_pred_las,y_test[i]))
 
     mse_las = np.mean(mse_list)
+    mse_las_var = np.var(mse_list)
+    # print('MSE lasso:', mse_las,"±",mse_las_var)
 
 
-    print('MSE linear:', mse_lin)
-    print('MSE ridge:', mse_rid)
-    print('MSE lasso:', mse_las)
+    print('MSE linear:', mse_lin,"±",mse_lin_var)
+    print('MSE ridge:', mse_rid,"±",mse_rid_var)
+    print('MSE lasso:', mse_las,"±",mse_las_var)
 
 
 # print('This program determines the best model and parameters without clearing training data with outliers')
