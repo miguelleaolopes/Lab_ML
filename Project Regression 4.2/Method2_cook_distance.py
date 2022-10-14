@@ -50,6 +50,39 @@ plt.ylabel('Cooks Distance')
 plt.show()
 
 
+## Doble cook
+
+
+x_interm = np.copy(x_import)
+y_interm = np.copy(y_import)
+
+for i in range(2):
+    Xbig_import = sm.add_constant(x_interm)
+
+    #fit linear regression model from statsmodels
+    model = sm.OLS(y_interm, Xbig_import).fit() 
+    np.set_printoptions(suppress=True)
+
+    #create instance of influence
+    influence = model.get_influence()
+    summary_influence = influence.summary_frame()
+
+    #obtain Cook's distance for each observation
+    cooks = influence.cooks_distance
+
+    # Indices of points with the distance above a certain threshold I>4/n(/2.2)
+    threshold_cook = 4/np.shape(x_interm)[0]
+    indices = [i for i,v in enumerate(cooks[0]) if v > threshold_cook]
+
+    print(" There are",np.shape(indices)[0], "outliers:\n",indices)
+
+
+    x_interm = np.delete(x_interm,indices,axis=0)
+    y_interm = np.delete(y_interm,indices,axis=0)
+
+x_import_wo_cook = x_interm
+y_import_wo_cook = y_interm
+
 
 # Testing SSE and MSE directly from all data (before cv)
 cook_linear_model = linear_model(x_import,y_import)
