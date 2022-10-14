@@ -73,6 +73,8 @@ for i in range(2):
     # Indices of points with the distance above a certain threshold I>4/n(/2.2)
     threshold_cook = 4/np.shape(x_interm)[0]
     indices = [i for i,v in enumerate(cooks[0]) if v > threshold_cook]
+    indices_bool = cooks[0] > threshold_cook
+    print(indices_bool)
 
     print(" There are",np.shape(indices)[0], "outliers:\n",indices)
 
@@ -90,4 +92,4 @@ print("SSE for Cook before CV:", (np.linalg.norm(y_import_wo_cook-cook_linear_mo
 print("MSE for Cook before CV:", mean_squared_error(y_import_wo_cook, cook_linear_model.predict(x_import_wo_cook)))
 
 alpha_list = np.linspace(0.001,1,50)
-determine_best_model(x_import_wo_cook,y_import_wo_cook,500,alpha_list)
+# determine_best_model(x_import_wo_cook,y_import_wo_cook,500,alpha_list)
