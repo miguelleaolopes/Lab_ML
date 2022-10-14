@@ -4,8 +4,6 @@ from model_lasso import *
 from model_linear import *
 
 
-# alpha_list = np.linspace(0.001,3,50)
-
 def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     '''This function tests all models'''
     split_data(x_imp,y_imp,N_val,0.2)
