@@ -36,8 +36,6 @@ cooks_filter1 = np.delete(cooks[0],indices,axis=0)
 x_import_wo_cook = np.delete(x_import,indices,axis=0)
 y_import_wo_cook = np.delete(y_import,indices,axis=0)
 
-# print(np.shape(x_import_wo_cook))
-# print(np.shape(y_import_wo_cook))
 
 cooks_out1 = []
 for i in indices:
@@ -51,48 +49,6 @@ plt.xlabel('x')
 plt.ylabel('Cooks Distance')
 plt.show()
 
-
-#######################################################
-# --- Trying to implement the method from the root ---
-#######################################################
-
-# p_size_features = np.shape(x_import)[1]
-# n_observations = np.shape(x_import)[0]
-
-# class CooksDistance(Visualizer):
-    
-#     def fit(self, X, y):
-#         # Leverage is computed as the diagonal of the projection matrix of X 
-#         # TODO: whiten X before computing leverage
-#         self.leverage_ = (X * np.linalg.pinv(X).T).sum(1)
-        
-#         # Compute the MSE
-#         rank = np.linalg.matrix_rank(X)
-#         df = X.shape[0] - rank
-        
-#         resid = y - LinearRegression().fit(X, y).predict(X)
-#         mse = np.dot(resid, np.transpose(resid)) / df 
-        
-#         resid_studentized_internal = resid / np.sqrt(mse) / np.sqrt(1-self.leverage_)
-        
-#         self.distance_ = resid_studentized_internal**2 / X.shape[1]
-#         self.distance_ *= self.leverage_ / (1 - self.leverage_)
-
-#         self.p_values_ = sp.stats.f.sf(self.distance_, X.shape[1], df)
-        
-#         self.draw()
-#         return self
-
-# viz = CooksDistance().fit(x_import, y_import[:,0])
-# viz.show()
-# viz.finalize()
-
-################################################
-
-
-# visualizer = CooksDistance()
-# visualizer.fit(Xbig_import, y_import[:,0])
-# visualizer.show()
 
 
 # Testing SSE and MSE directly from all data (before cv)
