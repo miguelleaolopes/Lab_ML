@@ -89,17 +89,16 @@ plt.show()
 
 ################################################
 
-# cook_linear_model = linear_model(x_import,y_import)
-# influence = cook_linear_model
 
 # visualizer = CooksDistance()
 # visualizer.fit(Xbig_import, y_import[:,0])
 # visualizer.show()
 
-# models = LinearRegression()
-# visualizer_residuals = ResidualsPlot(models,qqplot=True, hist=False,)
-# visualizer_residuals.fit(x_import, y_import[:,0])
-# visualizer_residuals.show()
+
+# Testing SSE and MSE directly from all data (before cv)
+cook_linear_model = linear_model(x_import,y_import)
+print("SSE for Cook before CV:", (np.linalg.norm(y_import_wo_cook-cook_linear_model.predict(x_import_wo_cook)))**2)
+print("MSE for Cook before CV:", mean_squared_error(y_import_wo_cook, cook_linear_model.predict(x_import_wo_cook)))
 
 alpha_list = np.linspace(0.001,1,50)
 determine_best_model(x_import_wo_cook,y_import_wo_cook,500,alpha_list)
