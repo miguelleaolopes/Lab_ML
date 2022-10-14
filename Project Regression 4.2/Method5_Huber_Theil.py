@@ -5,7 +5,7 @@ from sklearn.linear_model import TheilSenRegressor, HuberRegressor
 import statsmodels.api as sm
 
 
-print("Determining outliars using RANSAC method")
+print("Determining outliars using Huber method")
 
 # Initializing the model
 Huber = HuberRegressor(epsilon=1., max_iter=10000,tol=1e-05)
