@@ -8,14 +8,15 @@ import statsmodels.api as sm
 print("Determining outliars using Huber method")
 
 # Initializing the model
-Huber = HuberRegressor(epsilon=1., max_iter=10000,tol=1e-05)
+Huber = HuberRegressor(epsilon=1.8, max_iter=10000,tol=1e-05)
 
 # training the model
 Huber.fit(x_import, y_import)
 Huber.score(x_import, y_import)
 
 # inlier mask
-inlier_mask = Huber.outliers_
+outlier_mask = Huber.outliers_
+inlier_mask = np.where(outlier_mask == False, True, False)
 # print(inlier_mask)
 
 # for loop to count
