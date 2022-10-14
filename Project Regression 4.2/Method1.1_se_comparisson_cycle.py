@@ -4,7 +4,7 @@ from model_lasso import *
 from model_linear import *
 from determine_best_model import determine_best_model
 
-print("Determining outliars using ciclical SE comparisson method")
+print("Determining outliars using cyclical SE comparisson method")
 
 Test_passed = False
 out_list = []
@@ -20,7 +20,7 @@ while not Test_passed and len(out_list) < 20:
     for i in range(len(x_import_wo)):
         SE_list = np.hstack([SE_list,(y_import_wo[i]-y_pred[i])**2])
     
-    threshold = np.mean(SE_list) + 4.3*np.std(SE_list)
+    threshold = np.mean(SE_list) + 1*np.std(SE_list)
     outlier = np.amax(SE_list)
     outlier_index = np.where(SE_list == outlier)[0][0]
 
