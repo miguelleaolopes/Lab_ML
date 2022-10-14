@@ -14,7 +14,7 @@ Test_passed = False
 out_list = []
 x_import_wo, y_import_wo = x_import.copy(), y_import.copy()
 
-while not Test_passed:# and len(out_list) < 20:
+while not Test_passed and len(out_list) < 20:
     col_ones = np.ones((np.shape(x_import_wo)[0],1))
     Xbig_import = np.hstack([col_ones,x_import_wo])
     model = sm.OLS(y_import_wo, Xbig_import).fit() 
@@ -22,16 +22,23 @@ while not Test_passed:# and len(out_list) < 20:
 
     influence = model.get_influence()
     summary_influence = influence.summary_frame()
-    cooks = influence.cooks_distance
+    dffits = influence.dffits
 
-    outlier = np.amax(cooks[0])
-    outlier_index = np.where(cooks[0] == outlier)[0][0]
+    outlier = np.amax(np.abs(dffits[0]))
+    outlier_index = np.where(np.abs(dffits[0]) == outlier)[0][0]
 
-    threshold_cook = 4/np.shape(x_import_wo)[0]
+    #threshold = 2*np.sqrt(np.shape(Xbig_import)[1])/(np.shape(x_import_wo)[0] - np.shape(Xbig_import)[1])
+    threshold = dffits[1]
+    
+    # plt.plot(list(range(np.shape(dffits[0])[0])), dffits[0])
+    # plt.hlines(threshold,0,np.shape(x_import)[0], color='red')
+    # plt.hlines(-1*threshold,0,np.shape(x_import)[0], color='red')
+    # plt.xlabel('x')
+    # plt.ylabel('dffits')
+    # plt.show()
 
 
-
-    if cooks[0][outlier_index] > threshold_cook:
+    if np.abs(dffits[0][outlier_index]) > threshold:
         print('Outlier removed:',outlier_index)
         out_list.append(np.where(x_import == x_import_wo[outlier_index])[0][0])
         x_import_wo = np.delete(x_import_wo,outlier_index,axis=0)
