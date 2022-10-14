@@ -24,6 +24,7 @@ summary_influence = influence.summary_frame()
 
 #obtain Cook's distance for each observation
 cooks = influence.cooks_distance
+print(cooks[0])
 
 # Indices of points with the distance above a certain threshold I>4/n(/2.2)
 threshold_cook = 4/np.shape(x_import)[0]/2.2
