@@ -1,6 +1,4 @@
-from tabnanny import verbose
-from model_linear import *
-from determine_best_model import *
+from initialization import *
 from yellowbrick.base import Visualizer
 from yellowbrick.regressor import CooksDistance
 from yellowbrick.regressor import ResidualsPlot
@@ -9,8 +7,8 @@ import statsmodels.api as sm
 
 class method2_cooks_distance:
 
-    def __init__(self,verbose=False,show_plt=False):
-        self.verbose = verbose
+    def __init__(self,silent=False,show_plt=False):
+        self.silent = silent
         self.show_plt = show_plt
         self.outliers_removed = False
 
@@ -41,7 +39,7 @@ class method2_cooks_distance:
         for i in self.out_list:
             self.out_vals.append(cooks[0][i])
 
-        if verbose: print("Values of Outliars:\n",self.out_vals)
+        if self.silent: print("Values of Outliars:\n",self.out_vals)
 
         if self.show_plt:
             plt.plot(list(range(np.shape(cooks)[1])), cooks[0])

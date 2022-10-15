@@ -20,6 +20,9 @@ x_train,y_train,x_test,y_test, x_train_s, x_test_s = [], [], [], [], [], []
 # Essential functions
 def split_data(x,y,N_list,test_size):
 
+    global x_train,y_train,x_test,y_test, x_train_s, x_test_s
+    x_train,y_train,x_test,y_test, x_train_s, x_test_s = [], [], [], [], [], []
+
     for i in range(N_list):
         result = train_test_split(x, y, test_size=test_size)
         x_train.append(result[0])
@@ -32,8 +35,10 @@ def split_data(x,y,N_list,test_size):
 
 def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     '''This function tests all models'''
+    global x_train,y_train,x_test,y_test, x_train_s, x_test_s
+
     split_data(x_imp,y_imp,N_val,0.2)
-    models, mse_mean, mse_var, best_alphas = ['Linear', 'Ridge', 'Lasso'], [], [], []
+    model_names, mse_mean, mse_var, alphas_mean = ['Linear', 'Ridge', 'Lasso'], [], [], []
 
     if not Centered:
         print('Not centered features')
@@ -56,7 +61,7 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
 
     mse_mean.append(np.mean(mse_list))
     mse_var.append(np.var(mse_list))
-    best_alphas.append(0) #Just to maintain the index consistent
+    alphas_mean.append(0) #Just to maintain the index consistent
 
     # _________________________________________________________________________________
 
@@ -67,13 +72,13 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
         # best_ridalpha_lis.append(ridcv_model[1]['alpha'])
         best_ridalpha_lis.append(ridcv_model[1])
 
-    best_alphas.append(np.mean(best_ridalpha_lis))
-    print(best_alphas[1],"±",np.std(best_ridalpha_lis))
+    alphas_mean.append(np.mean(best_ridalpha_lis))
+    print(alphas_mean[1],"±",np.std(best_ridalpha_lis))
 
     print('Calculating mse for ridge model ....')
     mse_list = []
     for i in trange(N_val):
-        rid_model = ridge_model(x_trn[i],y_train[i],best_alphas[1],solver='auto',fit_intercept=True)
+        rid_model = ridge_model(x_trn[i],y_train[i],alphas_mean[1],solver='auto',fit_intercept=True)
         y_pred_rid = rid_model.predict(x_tst[i])
         mse_list.append(mean_squared_error(y_pred_rid,y_test[i]))
 
@@ -89,24 +94,24 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
         # best_lasalpha_lis.append(lascv_model[1]['alpha'])
         best_lasalpha_lis.append(lascv_model[1])
 
-    best_alphas.append(np.mean(best_lasalpha_lis))
-    print(best_alphas[2],"±",np.std(best_lasalpha_lis))
+    alphas_mean.append(np.mean(best_lasalpha_lis))
+    print(alphas_mean[2],"±",np.std(best_lasalpha_lis))
 
     print('Calculating mse for lasso model ....')
     mse_list = []
     for i in trange(N_val):
-        las_model = ridge_model(x_trn[i],y_train[i],best_alphas[2],fit_intercept=True)
+        las_model = ridge_model(x_trn[i],y_train[i],alphas_mean[2],fit_intercept=True)
         y_pred_las = las_model.predict(x_tst[i])
         mse_list.append(mean_squared_error(y_pred_las,y_test[i]))
 
     mse_mean.append(np.mean(mse_list))
     mse_var.append(np.var(mse_list))
 
-    for i in range(len(models)):
-        print('MSE',models[i],':', mse_mean[i],"±",mse_var[i])
+    for i in range(len(model_names)):
+        print('MSE',model_names[i],':', mse_mean[i],"±",mse_var[i])
     
     best_mse = np.min(mse_mean)
-    best_index = np.where(mse_mean == best_mse)[0][0]
-    print('##### best model is',models[best_index],'#####')
+    bestindex = np.where(mse_mean == best_mse)[0][0]
+    print('##### best model is',model_names[bestindex],'#####')
 
-    return models, best_alphas, best_index   
+    return model_names, alphas_mean, bestindex  

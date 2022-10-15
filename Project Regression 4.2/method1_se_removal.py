@@ -1,11 +1,10 @@
 from initialization import *
 
 
-
 class method1_se_removal:
 
-    def __init__(self,verbose=False,show_plt=False):
-        self.verbose = verbose
+    def __init__(self,silent=False,show_plt=False):
+        self.silent = silent
         self.show_plt = show_plt
         self.outliers_removed = False
 
@@ -29,7 +28,7 @@ class method1_se_removal:
             plt.ylabel('SE', fontsize=14)
             plt.xlabel('Data Index', fontsize=14)
             plt.grid(True)
-            plt.show()
+            plt.silent()
 
 
         for i in range(len(x_import)):
@@ -65,7 +64,7 @@ class method1_se_removal:
 
         
             if SE_list[outlier_index] > threshold:
-                if self.verbose: print('Outlier removed:',outlier_index)
+                if self.silent: print('Outlier removed:',outlier_index)
                 self.out_list.append(np.where(x_import == self.x_import_wo[outlier_index])[0][0])
                 self.x_import_wo = np.delete(self.x_import_wo,outlier_index,axis=0)
                 self.y_import_wo = np.delete(self.y_import_wo,outlier_index,axis=0)
@@ -84,10 +83,8 @@ class method1_se_removal:
     
     def test_method(self):
         if self.outliers_removed:
-            print(np.shape(self.x_import_wo))
             self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo, 200, np.linspace(0.001,2,50))
 
         else: print('Outliers not removed, please remove outliers first with self.remove_outliers()!')
 
 
-    

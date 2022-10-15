@@ -1,7 +1,7 @@
 from initialization import *
 
 
-class method1_1_cyclical_se_removal:
+class method1_1_se_removal_cyclical:
 
     def __init__(self,verbose=False):
         self.verbose = verbose

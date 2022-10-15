@@ -1,13 +1,13 @@
 
 from method1_se_removal import *
-# from method1_1_se_removal_cyclical import *
+from method1_1_se_removal_cyclical import *
 
 m1 = method1_se_removal()
 m1.remove_outliers()
 m1.test_method()
 
-m2 = method1_se_removal()
-m2.remove_outliers()
+m2 = method1_1_se_removal_cyclical()
+m2.remove_outliers_cyclical()
 m2.test_method()
 
 
