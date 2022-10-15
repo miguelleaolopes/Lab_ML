@@ -10,7 +10,7 @@ mse_list, min_mse = [], []
 methods = ['method 1','method 1.1','method 2','method 2.1','method 3','method 4','method 5','method 6']
 models = ['linear', 'ridge', 'lasso']
 
-alpha_list = np.linspace(0.001,1,200)
+alpha_list = np.linspace(0.001,1,300)
 N_validation = 1000
 
 m1 = method1_se_removal(alpha_list=alpha_list,N_val=N_validation)
@@ -59,11 +59,12 @@ outliers = all_outliers[lowest_location[0][0]]
 print('The best method is',methods[lowest_location[0][0]],'with',models[lowest_location[1][0]],'model with',len(outliers),'outliers')
 print('Outliers:', outliers)
 
+
 x_import_wo = np.delete(x_import, outliers, axis=0)
 y_import_wo = np.delete(y_import, outliers, axis=0)
 
 print('Determining best model considering the previous outliers')
-models, best_alphas, best_index, mse_mean = determine_best_model(x_import_wo,y_import_wo,N_validation,np.linspace(0.001,1,200),Centered=False)
+models, best_alphas, best_index, mse_mean = determine_best_model(x_import_wo,y_import_wo,10000,np.linspace(0.001,0.1,600),Centered=False)
 print('The best model is',models[best_index],'with and alpha of',best_alphas[best_index])
 
 

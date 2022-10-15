@@ -101,7 +101,7 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     print('Calculating mse for lasso model ....')
     mse_list = []
     for i in trange(N_val):
-        las_model = ridge_model(x_trn[i],y_train[i],alphas_mean[2],fit_intercept=True)
+        las_model = lasso_model(x_trn[i],y_train[i],alphas_mean[2],fit_intercept=True)
         y_pred_las = las_model.predict(x_tst[i])
         mse_list.append(mean_squared_error(y_pred_las,y_test[i]))
 
