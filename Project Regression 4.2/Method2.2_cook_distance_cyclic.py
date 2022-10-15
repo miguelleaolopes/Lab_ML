@@ -3,9 +3,9 @@ from determine_best_model import *
 from yellowbrick.base import Visualizer
 from yellowbrick.regressor import CooksDistance
 from yellowbrick.regressor import ResidualsPlot
-
 import statsmodels.api as sm
 
+class method2_2_cyclical_se_comparisson
 
 print("Determining outliars using cyclical Cooks Distance")
 

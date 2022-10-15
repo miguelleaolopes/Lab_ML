@@ -1,5 +1,5 @@
 #Import everything from initialization
-from initialization import * 
+from initialization import *
 
 
 def linear_model(x,y):

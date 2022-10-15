@@ -1,7 +1,5 @@
 from initialization import *
 
-
-
 # def ridge_modelcv(x,y,alpha_list,cv,fit_int=False,solv=False):
 #     '''returns the best parameters for a ridge model using GridSearchCV'''
 #     param = {'alpha':alpha_list}
