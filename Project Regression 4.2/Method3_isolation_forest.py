@@ -30,5 +30,5 @@ class method3_isolation_forest:
     def test_method(self):
     
         if self.outliers_removed:
-            self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo,self.N_val,self.alpha_list)
+            self.models, self.best_alphas, self.best_index, self.mse_mean = determine_best_model(self.x_import_wo, self.y_import_wo,self.N_val,self.alpha_list)
         else: print('Outliers not removed, please remove outliers first with self.remove_outliers()!')

@@ -40,10 +40,10 @@ class method6_dffits:
                 self.threshold = dffits[1]
 
             elif self.thd_type == 'theoretical':
-                self.threshold = 2*np.sqrt(np.shape(Xbig_import)[1])/(np.shape(x_import_wo)[0] - np.shape(Xbig_import)[1])
+                self.threshold = 2*np.sqrt(np.shape(Xbig_import)[1])/(np.shape(self.x_import_wo)[0] - np.shape(Xbig_import)[1])
             
 
-            if self.show_plt():
+            if self.show_plt:
                 plt.plot(list(range(np.shape(dffits[0])[0])), dffits[0])
                 plt.hlines(self.threshold,0,np.shape(x_import)[0], color='red')
                 plt.hlines(-1*self.threshold,0,np.shape(x_import)[0], color='red')
@@ -54,18 +54,20 @@ class method6_dffits:
 
             if np.abs(dffits[0][outlier_index]) > self.threshold:
                 if not self.silent: print('Outlier removed:',outlier_index)
-                out_list.append(np.where(x_import == self.x_import_wo[outlier_index])[0][0])
+                self.out_list.append(np.where(x_import == self.x_import_wo[outlier_index])[0][0])
                 self.x_import_wo = np.delete(self.x_import_wo,outlier_index,axis=0)
-                self.out_listy_import_wo = np.delete(self.y_import_wo,outlier_index,axis=0)
+                self.y_import_wo = np.delete(self.y_import_wo,outlier_index,axis=0)
             else:
                 self.thd_passed = True
 
-        out_list = np.sort(out_list)
-        print(len(out_list),'outliers found:\n',out_list)
+        self.out_list = np.sort(self.out_list)
+        print(len(self.out_list),'outliers found:\n',self.out_list)
         self.outliers_removed = True
     
     def test_method(self):
         if self.outliers_removed:
-            self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo,self.N_val,self.alpha_list)
+            self.models, self.best_alphas, self.best_index, self.mse_mean = determine_best_model(self.x_import_wo, self.y_import_wo,self.N_val,self.alpha_list)
+
+
 
 

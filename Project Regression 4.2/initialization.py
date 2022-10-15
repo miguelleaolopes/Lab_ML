@@ -32,6 +32,7 @@ def split_data(x,y,N_list,test_size):
 
         x_train_s.append(StandardScaler().fit_transform(result[0]))
         x_test_s.append(StandardScaler().fit_transform(result[1]))
+    return x_train,y_train,x_test,y_test, x_train_s, x_test_s
 
 def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     '''This function tests all models'''
@@ -114,4 +115,4 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     bestindex = np.where(mse_mean == best_mse)[0][0]
     print('##### best model is',model_names[bestindex],'#####')
 
-    return model_names, alphas_mean, bestindex  
+    return model_names, alphas_mean, bestindex, mse_mean
