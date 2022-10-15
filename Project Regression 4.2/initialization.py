@@ -38,7 +38,7 @@ def determine_best_model(x_imp,y_imp,N_val,alpha_list,Centered=False):
     global x_train,y_train,x_test,y_test, x_train_s, x_test_s
 
     split_data(x_imp,y_imp,N_val,0.2)
-    model_names, mse_mean, mse_var, alphas_mean = ['Linear', 'Ridge', 'Lasso'], [], [], []
+    model_names, mse_mean, mse_var, alphas_mean = ['linear', 'ridge', 'lasso'], [], [], []
 
     if not Centered:
         print('Not centered features')

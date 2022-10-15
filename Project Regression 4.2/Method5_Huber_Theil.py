@@ -1,49 +1,94 @@
-from model_linear import *
-from determine_best_model import *
+from initialization import *
 from sklearn.linear_model import TheilSenRegressor, HuberRegressor
-
 import statsmodels.api as sm
 
 
-print("Determining outliars using Huber method")
+class method5_huber_theil:
 
-# Initializing the model
-Huber = HuberRegressor(epsilon=1.8, max_iter=10000,tol=1e-05)
+    def __init__(self,silent=True,N_val=200,alpha_list = np.linspace(0.001,2,100)):
+        self.silent = silent
+        self.outliers_removed = False
+        self.N_val = N_val
+        self.alpha_list = alpha_list
 
-# training the model
-Huber.fit(x_import, y_import)
-Huber.score(x_import, y_import)
+    def remove_outliers(self):
+        print("\n\n\nMethod 5: Remove outliers with Huber Theil method all at once")
 
-# inlier mask
-outlier_mask = Huber.outliers_
-inlier_mask = np.where(outlier_mask == False, True, False)
-# print(inlier_mask)
+        Huber = HuberRegressor(epsilon=1.8, max_iter=10000,tol=1e-05)
+        Huber.fit(x_import, y_import)
+        Huber.score(x_import, y_import)
 
-# for loop to count
-count = 0
-index = []
-index_i = 0
-for i in inlier_mask:
-    if i==False:
-        index.append(index_i)
-        count +=1
-    index_i +=1
+        self.outlier_mask = Huber.outliers_
+        self.all_mask = np.where(self.outlier_mask == False, True, False)
+  
 
-# printing
-print("Total datapoints were : ", len(inlier_mask))
-print("Total outliers detected  were : ", count)
-print("Outliers:\n",index)
+        self.out_list = []
+        for i in range(len(self.all_mask)):
+            if self.all_mask[i] == False: self.out_list.append(i)
+        
+        
+        print("Total datapoints were : ", len(self.all_mask))
+        print('There are',len(self.out_list),'outliers.\n',self.out_list)
 
-x_import_wo_ransac = x_import[inlier_mask,:]
-y_import_wo_ransac = y_import[inlier_mask,:] 
-print("Shape of Xinlier:", x_import_wo_ransac.shape)
-print("Shape of Yinlier:", y_import_wo_ransac.shape)
+        self.x_import_wo = x_import[self.all_mask,:]
+        self.y_import_wo = y_import[self.all_mask,:]
 
-# Testing SSE and MSE directly from all data (before cv)
-huber_linear_model = linear_model(x_import,y_import)
-print("SSE for Huber before CV:", (np.linalg.norm(y_import_wo_ransac-huber_linear_model.predict(x_import_wo_ransac)))**2)
-print("MSE for Huber before CV:", mean_squared_error(y_import_wo_ransac, huber_linear_model.predict(x_import_wo_ransac)))
+        if not self.silent:
+            print("Shape of Xinlier:", self.x_import_wo.shape)
+            print("Shape of Yinlier:", self.y_import_wo.shape)
+
+            # Testing SSE and MSE directly from all data (before cv)
+            huber_linear_model = linear_model(x_import,y_import)
+            print("SSE for Huber before CV:", (np.linalg.norm(self.y_import_wo-huber_linear_model.predict(self.x_import_wo)))**2)
+            print("MSE for Huber before CV:", mean_squared_error(self.y_import_wo, huber_linear_model.predict(self.x_import_wo)))
+
+        self.outliers_removed = True
+
+    def find_epsilon(self):
+        print("\n\n\nRemove outliers with Huber Theil and find the best epsilon")
+        global x_train,y_train,x_test,y_test, x_train_s, x_test_s
+
+        mse_mean = []
+        eps_list=[1 + 0.001*i for i in range(3000)]
+
+        for i in trange(len(eps_list)):
+            # Initializing the model
+            Huber = HuberRegressor(epsilon=eps_list[i], max_iter=10000,tol=1e-05)
+            Huber.fit(x_import, y_import)
+            Huber.score(x_import, y_import)
 
 
-alpha_list = np.linspace(0.001,3,50)
-determine_best_model(x_import_wo_ransac,y_import_wo_ransac,200,alpha_list)
+            outlier_mask = Huber.outliers_
+            all_mask = np.where(outlier_mask == False, True, False)
+            out_list = []
+
+            for i in range(len(all_mask)):
+                if all_mask[i] == False: out_list.append(i)
+
+            x_import_wo = x_import[all_mask,:]
+            y_import_wo = y_import[all_mask,:]
+
+            N_validation = 500
+            split_data(x_import_wo,y_import_wo,N_validation,0.2)
+            
+
+            mse_list = []
+            for i in range(N_validation):
+                lin_model = linear_model(x_train[i],y_train[i]) #For linear we do not center
+                y_pred_lin = lin_model.predict(x_test[i])
+                mse_list.append(mean_squared_error(y_pred_lin,y_test[i]))
+
+            mse_mean.append(np.mean(mse_list))
+            
+        plt.plot(eps_list,mse_mean, color='blue', marker='o')
+        plt.title('MSE vs Epsilon value for Huber Theil', fontsize=14)
+        plt.ylabel('Epsilon', fontsize=14)
+        plt.xlabel('MSE', fontsize=14)
+        plt.grid(True)
+        plt.show()
+
+    def test_method(self):
+    
+        if self.outliers_removed:
+            self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo,self.N_val,self.alpha_list)
+        else: print('Outliers not removed, please remove outliers first with self.remove_outliers()!')

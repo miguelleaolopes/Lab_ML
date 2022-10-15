@@ -3,13 +3,15 @@ from initialization import *
 
 class method1_se_removal:
 
-    def __init__(self,silent=False,show_plt=False):
+    def __init__(self,silent=True,show_plt=False,N_val=200,alpha_list = np.linspace(0.001,2,100)):
         self.silent = silent
         self.show_plt = show_plt
         self.outliers_removed = False
+        self.N_val = N_val
+        self.alpha_list = alpha_list
 
     def remove_outliers(self):
-        print('Method 1: Removing outliers with highest standard error all at once')
+        print('\n\n\nMethod 1: Removing outliers with highest standard error all at once')
         modelwout = linear_model(x_import,y_import)
         SE_list, self.out_list = [], []
         index_list = [i for i in range(np.shape(x_import)[0])]
@@ -28,7 +30,7 @@ class method1_se_removal:
             plt.ylabel('SE', fontsize=14)
             plt.xlabel('Data Index', fontsize=14)
             plt.grid(True)
-            plt.silent()
+            plt.show()
 
 
         for i in range(len(x_import)):
@@ -43,7 +45,7 @@ class method1_se_removal:
 
 
     def remove_outliers_cyclical(self):
-        print('Method 1.1: Removing outliers with highest standard error one by one')
+        print('\n\n\nMethod 1.1: Removing outliers with highest standard error one by one')
         self.thd_passed = False
         self.out_list = []
         self.x_import_wo, self.y_import_wo = x_import.copy(), y_import.copy()
@@ -64,7 +66,7 @@ class method1_se_removal:
 
         
             if SE_list[outlier_index] > threshold:
-                if self.silent: print('Outlier removed:',outlier_index)
+                if not self.silent: print('Outlier removed:',outlier_index)
                 self.out_list.append(np.where(x_import == self.x_import_wo[outlier_index])[0][0])
                 self.x_import_wo = np.delete(self.x_import_wo,outlier_index,axis=0)
                 self.y_import_wo = np.delete(self.y_import_wo,outlier_index,axis=0)
@@ -74,7 +76,7 @@ class method1_se_removal:
         if self.thd_passed: print('Threshold reached')
         else: print('Outlier limit reached')
 
-        # self.out_list = np.sort(self.out_list)
+        self.out_list = np.sort(self.out_list)
         print(len(self.out_list),'outliers found:\n',self.out_list)
 
         self.outliers_removed = True
@@ -83,7 +85,7 @@ class method1_se_removal:
     
     def test_method(self):
         if self.outliers_removed:
-            self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo, 200, np.linspace(0.001,2,50))
+            self.models, self.best_alphas, self.best_index = determine_best_model(self.x_import_wo, self.y_import_wo, self.N_val, self.alpha_list)
 
         else: print('Outliers not removed, please remove outliers first with self.remove_outliers()!')
 
