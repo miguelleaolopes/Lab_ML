@@ -19,7 +19,7 @@ for hue in range(360):
         colors.extend(rgb)
 
 
-# Convert list to bytes
+# Convert list to bytes ddd
 img = Image.frombytes("RGB", (30, 30), x_train[2])
 img.show()
 img.save('pic1.png')
