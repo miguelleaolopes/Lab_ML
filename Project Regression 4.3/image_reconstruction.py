@@ -4,6 +4,8 @@ from matplotlib import pyplot as plt
 x_train = np.load('data/Xtrain_Classification1.npy')
 y_train = np.load('data/Ytrain_Classification1.npy')
 
+
+
 # reconstrução de uma das imagens sendo que os dados são listas de valores RBG de uma imagem 30x30
 x_train_mod = np.reshape(x_train,(8273,30,30,3))
 print(np.shape(x_train))
