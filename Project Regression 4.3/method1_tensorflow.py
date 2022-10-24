@@ -100,7 +100,7 @@ keras.utils.plot_model(model, show_shapes=True)
 epochs = 50
 
 callbacks = [
-    keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5"),
+    keras.callbacks.ModelCheckpoint("save_at_i_h5/save_at_{epoch}.h5"),
 ]
 model.compile(
     optimizer=keras.optimizers.Adam(1e-3),
