@@ -11,6 +11,7 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_size=image_size,
     batch_size=batch_size,
 )
+
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     "images",
     validation_split=0.2,
@@ -95,7 +96,7 @@ val_ds = val_ds.prefetch(buffer_size=32)
 # Run the model
 
 model = make_model(input_shape=image_size + (3,), num_classes=2)
-keras.utils.plot_model(model, show_shapes=True)
+# keras.utils.plot_model(model, show_shapes=True)
 
 epochs = 50
 
