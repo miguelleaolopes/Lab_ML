@@ -12,7 +12,7 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     batch_size=batch_size,
 )
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    "image",
+    "images",
     validation_split=0.2,
     subset="validation",
     seed=1337,
@@ -28,15 +28,6 @@ data_augmentation = keras.Sequential(
         layers.RandomRotation(0.1),
     ]
 )
-
-# Rescaling
-
-inputs = keras.Input(shape=input_shape)
-x = data_augmentation(inputs)
-x = layers.Rescaling(1./255)(x)
-
-train_ds = train_ds.prefetch(buffer_size=32)
-val_ds = val_ds.prefetch(buffer_size=32)
 
 
 def make_model(input_shape, num_classes):
@@ -89,6 +80,16 @@ def make_model(input_shape, num_classes):
     x = layers.Dropout(0.5)(x)
     outputs = layers.Dense(units, activation=activation)(x)
     return keras.Model(inputs, outputs)
+
+# Rescaling
+
+inputs = keras.Input(shape=image_size + (3,))
+x = data_augmentation(inputs)
+x = layers.Rescaling(1./255)(x)
+
+train_ds = train_ds.prefetch(buffer_size=32)
+val_ds = val_ds.prefetch(buffer_size=32)
+
 
 
 # Run the model
