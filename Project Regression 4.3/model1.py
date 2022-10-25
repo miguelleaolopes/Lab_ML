@@ -4,8 +4,7 @@ class model1:
 
     def __init__(self) -> None:
         pass
-
-
+        
     def create_model(self):
         self.model = models.Sequential()
         self.model.add(layers.Conv2D(30, (3, 3), activation='relu', input_shape=(30, 30, 3)))
