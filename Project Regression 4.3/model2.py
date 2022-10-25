@@ -6,25 +6,30 @@ class model2:
         self.model = models.Sequential()
 
     def create_model(self):
-        self.model.add(layers.Conv2D(32, 3, strides=2, activation='relu', padding="same"))
+        self.model.add(layers.Conv2D(64, 3, strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
         self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
         self.model.add(layers.Dropout(0.2))
         self.model.add(layers.BatchNormalization())
-        self.model.add(layers.Conv2D(64, 3, strides=2, activation='relu', padding="same"))
-        self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
-        self.model.add(layers.Dropout(0.2))
-        self.model.add(layers.BatchNormalization())
+
         self.model.add(layers.Conv2D(128, 3, strides=2, activation='relu', padding="same"))
+        self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
         self.model.add(layers.Dropout(0.2))
         self.model.add(layers.BatchNormalization())
+
+        self.model.add(layers.Conv2D(256, 3, strides=2, activation='relu', padding="same"))
+        self.model.add(layers.Dropout(0.2))
+        self.model.add(layers.BatchNormalization())
+
         self.model.add(layers.Flatten())
-        self.model.add(layers.MaxPooling2D(3, strides=2, padding="same"))
+        
+        self.model.add(layers.Dense(512, activation='relu'))
+        self.model.add(layers.Dropout(0.2))
+        self.model.add(layers.BatchNormalization())
+
         self.model.add(layers.Dense(256, activation='relu'))
         self.model.add(layers.Dropout(0.2))
         self.model.add(layers.BatchNormalization())
-        self.model.add(layers.Dense(128, activation='relu'))
-        self.model.add(layers.Dropout(0.2))
-        self.model.add(layers.BatchNormalization())
+
         self.model.add(layers.Dense(1, activation="sigmoid"))
 
 
@@ -33,8 +38,8 @@ class model2:
         self.model.summary()
 
     def compile(self):
-        self.model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        self.model.compile(optimizer=keras.optimizers.Adam(1e-3),
+              loss="binary_crossentropy",
               metrics=['accuracy'])
 
         self.history = self.model.fit(x_train, y_train, epochs=10, 
