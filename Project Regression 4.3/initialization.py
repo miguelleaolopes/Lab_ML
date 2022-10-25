@@ -6,6 +6,8 @@ from keras.utils import plot_model
 import tensorflow as tf
 from tensorflow import keras
 from keras import datasets, layers, models
+from colorsys import hsv_to_rgb
+from PIL import Image
 
 
 # Import lists
@@ -25,4 +27,12 @@ def show_images(x,y,index):
     plt.show()
 
 
-    
+def convert_npy_to_image(x,y):
+    for i in range(np.shape(x)[0]):
+        img = Image.frombytes("RGB", (30, 30), x[i])
+        if y[i] == 1: #eyespot
+            img.save('images/eyespot/pic{}.png'.format(i))
+        else:
+            img.save('images/spot/pic{}.png'.format(i))
+
+    print('done')
