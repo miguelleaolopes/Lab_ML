@@ -1,4 +1,6 @@
 from initialization import *
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
 image_size = (30, 30)
 batch_size = 32
@@ -96,7 +98,7 @@ val_ds = val_ds.prefetch(buffer_size=32)
 # Run the model
 
 model = make_model(input_shape=image_size + (3,), num_classes=2)
-# keras.utils.plot_model(model, show_shapes=True)
+keras.utils.plot_model(model, show_shapes=True)
 
 epochs = 50
 
