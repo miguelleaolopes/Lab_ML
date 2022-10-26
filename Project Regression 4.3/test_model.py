@@ -1,17 +1,8 @@
 from initialization import *
-from model1 import *
-from model2 import *
-
+from model import *
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-# m1 = model1()
-# m1.create_model()
-# print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
-# m1.summary()
-# m1.compile()
-# m1.show_acc_plt(save_img = True)
-# m1.show_acc_val()
 
 my_callbacks = [
     tf.keras.callbacks.CSVLogger("run/training.log", separator=",", append=False),
@@ -20,11 +11,11 @@ my_callbacks = [
     tf.keras.callbacks.ModelCheckpoint(filepath='run/model_best.h5', monitor='val_accuracy', mode='max', save_best_only=True)
 ]
 
-m2 = model2()
-m2.create_model()
+m2 = model()
+m2.layers(1)
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 m2.summary()
-m2.compile(epoch=100,calls=my_callbacks)
+m2.compile(epoch=50,calls=my_callbacks,compiler = 1) 
 m2.show_acc_plt(save_img = True)
 m2.show_acc_val()
 
