@@ -12,10 +12,10 @@ my_callbacks = [
 ]
 
 m2 = model()
-m2.layers(1)
+m2.layers(2)
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 m2.summary()
-m2.compile(epoch=50,calls=my_callbacks,compiler = 1) 
+m2.compile(epoch=100,calls=my_callbacks,compiler = 2) 
 m2.show_acc_plt(save_img = True)
 m2.show_acc_val()
 
