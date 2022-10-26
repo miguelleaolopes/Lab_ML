@@ -51,7 +51,7 @@ class model2:
         plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
-        plt.ylim([0.5, 1])
+        plt.ylim([0.45, 1])
         plt.legend(loc='lower right')
         if save_img == True:
             plt.savefig("models_acc_epo/model2_acc_epo.png")
