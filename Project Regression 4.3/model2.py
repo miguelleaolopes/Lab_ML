@@ -1,3 +1,4 @@
+from gc import callbacks
 from initialization import *
 
 class model2:
@@ -37,23 +38,24 @@ class model2:
         print('##### Model Summary ##########')
         self.model.summary()
 
-    def compile(self):
+    def compile(self,epoch,calls = None):
         self.model.compile(optimizer=keras.optimizers.Adam(1e-3),
               loss="binary_crossentropy",
               metrics=['accuracy'])
 
-        self.history = self.model.fit(x_train, y_train, epochs=10, 
-                    validation_data=(x_test, y_test))
+        self.history = self.model.fit(x_train, y_train, epochs=epoch, 
+                    validation_data=(x_test, y_test),callbacks=calls)
 
-    def show_acc_plt(self):
+    def show_acc_plt(self, save_img = False):
         plt.plot(self.history.history['accuracy'], label='accuracy')
         plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
         plt.ylim([0.5, 1])
         plt.legend(loc='lower right')
+        if save_img == True:
+            plt.savefig("models_acc_epo/model2_acc_epo.png")
         plt.show()
-
 
     def show_acc_val(self):
         self.test_loss, self.test_acc = self.model.evaluate(x_test,  y_test, verbose=2)

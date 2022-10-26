@@ -27,13 +27,15 @@ class model1:
         self.history = self.model.fit(x_train, y_train, epochs=10, 
                     validation_data=(x_test, y_test))
 
-    def show_acc_plt(self):
+    def show_acc_plt(self, save_img = False):
         plt.plot(self.history.history['accuracy'], label='accuracy')
         plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
         plt.ylim([0.5, 1])
         plt.legend(loc='lower right')
+        if save_img == True:
+            plt.savefig("models_acc_epo/model1_acc_epo.png")
         plt.show()
 
 
