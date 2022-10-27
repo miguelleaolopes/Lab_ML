@@ -6,15 +6,16 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 my_callbacks = [
     tf.keras.callbacks.CSVLogger("run/training.log", separator=",", append=False),
-    tf.keras.callbacks.EarlyStopping(patience=10,verbose=1,monitor='val_loss'), #change to 50 in the end 
-    tf.keras.callbacks.TensorBoard(log_dir='./logs'),
+    tf.keras.callbacks.EarlyStopping(patience=50,verbose=1,monitor='val_loss'), #change to 50 in the end 
+    # tf.keras.callbacks.TensorBoard(log_dir='./logs'),
     tf.keras.callbacks.ModelCheckpoint(filepath='run/model_best.h5', monitor='val_accuracy', mode='max', save_best_only=True)
 ]
 
 m2 = model()
-m2.layers(1)
+m2.layers(2)
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 m2.summary()
-m2.compile(epoch=50,calls=my_callbacks,compiler = 1) 
+m2.compile(epoch=100,calls=my_callbacks,compiler = 2) 
 m2.show_acc_plt(save_img = True)
 m2.show_acc_val()
+
