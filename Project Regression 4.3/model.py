@@ -37,8 +37,8 @@ class model:
             
             if compiler == 'InceptionV3':
                 from keras.optimizers import RMSprop
-                self.model.compile (optimizer = RMSprop(learning_rate=0.0001)
-                                    loss = 'binary_crossentropy' ,
+                self.model.compile (optimizer = RMSprop(learning_rate=0.0001),
+                                    loss = 'binary_crossentropy',
                                     metrics = ['acc'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
@@ -181,7 +181,7 @@ class model:
         if layers_ind == 'InceptionV3':
             from keras.applications.inception_v3 import InceptionV3
             
-
+            print('Model only avaiable for images with sizes above 75x75')
             #Replace self.model
             self.model = InceptionV3(
                 input_shape = (30,30,3),

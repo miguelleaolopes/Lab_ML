@@ -12,10 +12,10 @@ my_callbacks = [
 ]
 
 m2 = model()
-m2.layers("without_dropout")
+m2.layers("InceptionV3")
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 m2.summary()
-m2.compile(epoch=100,calls=my_callbacks,compiler = "bin_adam") 
+m2.compile(epoch=100,calls=my_callbacks,compiler = "InceptionV3") 
 m2.show_acc_plt("without_dropout",save_img = True)
 m2.show_acc_val()
 
