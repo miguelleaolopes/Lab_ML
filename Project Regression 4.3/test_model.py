@@ -11,12 +11,15 @@ my_callbacks = [
     tf.keras.callbacks.ModelCheckpoint(filepath='run/model_best.h5', monitor='val_accuracy', mode='max', save_best_only=True)
 ]
 
+# model_used = "without_dropout"
+model_used = "with_dropout_2"
+
 m2 = model()
-m2.layers("without_dropout")
+m2.layers(model_used)
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 m2.summary()
-m2.compile(epoch=100,calls=my_callbacks,compiler = "bin_adam") 
-m2.show_acc_plt("without_dropout",save_img = True)
+m2.compile(epoch=150,calls=my_callbacks,compiler = "adam_bin") 
+m2.show_acc_plt(model_used,save_img = True)
 m2.show_acc_val()
 
 # m3 = model()
