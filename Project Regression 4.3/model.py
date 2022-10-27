@@ -34,6 +34,12 @@ class model:
                                 loss='binary_crossentropy', 
                                 optimizer=tf.optimizers.SGD(learning_rate=0.001), 
                                 metrics=['accuracy'])
+            
+            if compiler == 'InceptionV3':
+                from keras.optimizers import RMSprop
+                self.model.compile (optimizer = RMSprop(learning_rate=0.0001)
+                                    loss = 'binary_crossentropy' ,
+                                    metrics = ['acc'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
                         validation_data=(x_test, y_test),callbacks=calls)
@@ -172,10 +178,23 @@ class model:
             self.model.add(layers.Dropout(0.5))
             self.model.add(layers.Dense(10, activation="softmax"))
 
-        if layers_ind == 'Inception V3':
+        if layers_ind == 'InceptionV3':
             from keras.applications.inception_v3 import InceptionV3
             
-            self
+
+            #Replace self.model
+            self.model = InceptionV3(
+                input_shape = (30,30,3),
+                include_top = False, #Leave out last connected layer
+                weights = 'imagenet'
+            )
+
+            self.model.add(layers.Flatten()(self.model.output))
+            self.model.add(layers.Dense(1024, activation='sigmoid'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.Dense(1, activation='sigmoid'))
+
+
 
 
         self.layers_defined = True
