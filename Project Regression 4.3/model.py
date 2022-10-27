@@ -42,29 +42,24 @@ class model:
     def compile(self,epoch,calls = None,compiler=2):
 
         if self.layers_defined:
-            if compiler == 1:
-                self.model.compile(
-                            optimizer = 'adam',
-                            loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                            metrics = ['accuracy'])
-            if compiler == 2:
+            if compiler == "adam_bin":
                 self.model.compile(optimizer = keras.optimizers.Adam(1e-3),
                                     loss = "binary_crossentropy",
                                     metrics = ['accuracy'])
             
-            if compiler == 3:
+            if compiler == "adam_hinge":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
                                     loss = tf.keras.losses.Hinge(), ## To use Hinge the last activation needs to be a tanh
                                     metrics = ['accuracy'])
 
-            if compiler == 4:
+            if compiler == "sgd_bin":
                 self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=1e-3),
                                     loss = "binary_crossentropy",
                                     metrics = ['accuracy'])
             if compiler == "alexnet":
                 self.model.compile(
-                                loss='sparse_categorical_crossentropy', 
-                                optimizer=tf.optimizers.SGD(lr=0.001), 
+                                loss='binary_crossentropy', 
+                                optimizer=tf.optimizers.SGD(learning_rate=0.001), 
                                 metrics=['accuracy'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
@@ -72,7 +67,9 @@ class model:
         else:
             "Layers not defined, please define valid layers and compiler first"
 
-    def show_acc_plt(self, save_img = False):
+    def show_acc_plt(self, name, save_img = False):
+        
+        # plt.subplot(1, 2, 1)
         plt.plot(self.history.history['accuracy'], label='accuracy')
         plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
         plt.xlabel('Epoch')
@@ -80,12 +77,42 @@ class model:
         plt.ylim([0.45, 1])
         plt.legend(loc='lower right')
         if save_img == True:
-            plt.savefig("models_acc_epo/model2_acc_epo.png")
+            plt.savefig("models_acc_epo/model_acc_"+ name + ".png")
+        # plt.show()
+
+        # plt.subplot(1, 2, 2)
+        plt.plot(self.history.history['loss'], label='loss')
+        plt.plot(self.history.history['val_loss'], label = 'val_loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.ylim([0.0, plt.ylim()[1]])
+        plt.legend(loc='lower right')
+        if save_img == True:    
+            plt.savefig("models_loss_epo/model_loss_"+ name + ".png")
+        # plt.show()
+
+        plt.subplot(1, 2, 1)
+        plt.plot(self.history.history['accuracy'], label='accuracy')
+        plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.ylim([0.45, 1])
+        plt.legend(loc='lower right')
+        plt.subplot(1, 2, 2)
+        plt.plot(self.history.history['loss'], label='loss')
+        plt.plot(self.history.history['val_loss'], label = 'val_loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.ylim([0.0, plt.ylim()[1]])
+        plt.legend(loc='lower right')
+        plt.subplots_adjust(left=0.06,bottom=0.1,right=0.94,top=0.94,wspace=0.16,hspace=0.2)
         plt.show()
 
     def show_acc_val(self):
         self.test_loss, self.test_acc = self.model.evaluate(x_test,  y_test, verbose=2)
         print('Total Model Accuracy:', self.test_acc)
+
+        print("Best Validation Accuracy: ", max(self.history.history["val_accuracy"]))
 
     def layers(self,layers_ind=1):
         if layers_ind == 1:
@@ -99,7 +126,7 @@ class model:
             self.model.add(layers.Dense(10))
 
         ## With Dropout layers
-        if layers_ind == 2:
+        if layers_ind == "with_dropout":
             self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
@@ -127,7 +154,7 @@ class model:
             self.model.add(layers.Dense(1, activation="sigmoid"))
                 
         ## Without Dropout layers
-        if layers_ind == 3:
+        if layers_ind == "without_dropout":
             self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             # self.model.add(layers.Dropout(0.2))
@@ -145,11 +172,11 @@ class model:
             self.model.add(layers.Flatten())
             
             self.model.add(layers.Dense(256, activation='relu'))
-            self.model.add(layers.Dropout(0.2))
+            # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(128, activation='relu'))
-            self.model.add(layers.Dropout(0.2))
+            # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
