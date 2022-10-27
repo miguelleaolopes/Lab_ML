@@ -53,6 +53,16 @@ class model:
                 self.model.compile(optimizer = keras.optimizers.Adam(1e-3),
                                     loss = "binary_crossentropy",
                                     metrics = ['accuracy'])
+            
+            if compiler == 3:
+                self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
+                                    loss = tf.keras.losses.Hinge(), ## To use Hinge the last activation needs to be a tanh
+                                    metrics = ['accuracy'])
+
+            if compiler == 4:
+                self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=1e-3),
+                                    loss = "binary_crossentropy",
+                                    metrics = ['accuracy'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
                         validation_data=(x_test, y_test),callbacks=calls)
@@ -85,7 +95,7 @@ class model:
             self.model.add(layers.Dense(60, activation='relu'))
             self.model.add(layers.Dense(10))
 
-
+        ## With Dropout layers
         if layers_ind == 2:
             self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
@@ -99,6 +109,34 @@ class model:
 
             self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="same"))
             self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(256, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(128, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+                
+        ## Without Dropout layers
+        if layers_ind == 3:
+            self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            # self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding="same"))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            # self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="same"))
+            # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Flatten())
