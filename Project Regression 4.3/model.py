@@ -61,6 +61,11 @@ class model:
                 self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=1e-3),
                                     loss = "binary_crossentropy",
                                     metrics = ['accuracy'])
+            if compiler == "alexnet":
+                self.model.compile(
+                                loss='sparse_categorical_crossentropy', 
+                                optimizer=tf.optimizers.SGD(lr=0.001), 
+                                metrics=['accuracy'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
                         validation_data=(x_test, y_test),callbacks=calls)
@@ -149,7 +154,24 @@ class model:
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
 
+        if layers_ind == "alexnet":
+            self.model.add(layers.Conv2D(filters=96, kernel_size=(11, 11), strides=(4, 4), activation="relu", input_shape=(30, 30, 3),padding='same'))
+            self.model.add(layers.BatchNormalization())
+            self.model.add(layers.MaxPool2D(pool_size=(3, 3), strides= (2, 2), padding='same'))
+            self.model.add(layers.Conv2D(filters=256, kernel_size=(5, 5), strides=(1, 1), activation="relu", padding="same"))
+            self.model.add(layers.BatchNormalization())
+            self.model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding='same'))
+            self.model.add(layers.Conv2D(filters=384, kernel_size=(3, 3), strides=(1, 1), activation="relu", padding="same"))
+            self.model.add(layers.BatchNormalization())
+            self.model.add(layers.Conv2D(filters=384, kernel_size=(3, 3), strides=(1, 1), activation="relu", padding="same"))
+            self.model.add(layers.BatchNormalization())
+            self.model.add(layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), activation="relu", padding="same"))
+            self.model.add(layers.BatchNormalization())
+            self.model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding='same'))
+            self.model.add(layers.Flatten())
+            self.model.add(layers.Dense(4096, activation="relu"))
+            self.model.add(layers.Dropout(0.5))
+            self.model.add(layers.Dense(10, activation="softmax"))
+
         self.layers_defined = True
     
-
-
