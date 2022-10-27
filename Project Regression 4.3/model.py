@@ -8,8 +8,6 @@ class model:
         self.data_augmentation = data_augmentation
         self.layers_defined = False
 
-
-
     def create_model(self):
         self.model.add(layers.Conv2D(64, 3, strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
         self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
@@ -37,7 +35,6 @@ class model:
 
         self.model.add(layers.Dense(1, activation="sigmoid"))
 
-
     def summary(self):
         print('##### Model Summary ##########')
         self.model.summary()
@@ -46,13 +43,15 @@ class model:
 
         if self.layers_defined:
             if compiler == 1:
-                self.model.compile(optimizer = 'adam',
-                                loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                                metrics = ['accuracy'])
+                self.model.compile(
+                            optimizer = 'adam',
+                            loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                            metrics = ['accuracy'])
             if compiler == 2:
-                self.model.compile(optimizer = keras.optimizers.Adam(1e-3),
-                                    loss = "binary_crossentropy",
-                                    metrics = ['accuracy'])
+                self.model.compile(
+                                optimizer = keras.optimizers.Adam(1e-3),
+                                loss = "binary_crossentropy",
+                                metrics = ['accuracy'])
 
             self.history = self.model.fit(x_train, y_train, epochs=epoch, 
                         validation_data=(x_test, y_test),callbacks=calls)
