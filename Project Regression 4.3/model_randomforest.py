@@ -44,11 +44,11 @@ class RandomForestModel:
 class RandomForestModelCV:
 
     def __init__(self):
-        self.n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 5)]
+        self.n_estimators = [int(x) for x in np.linspace(start = 1, stop = 100, num = 5)]
         self.max_depth = [int(x) for x in np.linspace(100, 500, num = 5)]
         self.max_depth.append(None) 
         self.random_grid = {'n_estimators': self.n_estimators,'max_depth': self.max_depth}
-        self.model = RandomizedSearchCV(estimator = RandomForestClassifier(), param_distributions = self.random_grid,n_iter = 10, cv = 3, verbose=2, n_jobs = -1)
+        self.model = RandomizedSearchCV(estimator = RandomForestClassifier(), param_distributions = self.random_grid,n_iter = 5, cv = 3, verbose=2, n_jobs = -1)
     
     def fit(self):
         self.model.fit(x_train,y_train)
