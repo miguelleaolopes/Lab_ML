@@ -18,7 +18,7 @@ class model:
             if compiler == "adam_bin":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
                                     loss = "binary_crossentropy",
-                                    metrics = ['accuracy', get_f1])
+                                    metrics = ['accuracy', get_f1,F1_Score()])
             if compiler == "adam_hinge":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
                                     loss = tf.keras.losses.Hinge(), ## To use Hinge the last activation needs to be a tanh
@@ -51,7 +51,6 @@ class model:
 
     def show_acc_plt(self, name, save_img = False):
         
-        # plt.subplot(1, 2, 1)
         plt.plot(self.history.history['accuracy'], label='accuracy')
         plt.plot(self.history.history['val_accuracy'], label = 'val_accuracy')
         plt.xlabel('Epoch')
@@ -62,7 +61,6 @@ class model:
             plt.savefig("models_acc_epo/model_acc_"+ name + ".png")
         # plt.show()
 
-        # plt.subplot(1, 2, 2)
         plt.plot(self.history.history['loss'], label='loss')
         plt.plot(self.history.history['val_loss'], label = 'val_loss')
         plt.xlabel('Epoch')
@@ -71,6 +69,16 @@ class model:
         plt.legend(loc='lower right')
         if save_img == True:    
             plt.savefig("models_loss_epo/model_loss_"+ name + ".png")
+        # plt.show()
+        
+        plt.plot(self.history.history['get_f1'], label='get_f1')
+        plt.plot(self.history.history['val_get_f1'], label = 'val_get_f1')
+        plt.xlabel('Epoch')
+        plt.ylabel('F1 Score')
+        plt.ylim([0.0, plt.ylim()[1]])
+        plt.legend(loc='lower right')
+        if save_img == True:
+            plt.savefig("models_f1score_epo/model_f1score_"+ name + ".png")
         # plt.show()
 
         plt.subplot(1, 3, 1)
@@ -99,8 +107,9 @@ class model:
         plt.show()
 
     def show_acc_val(self):
-        # self.test_loss, self.test_acc = self.model.evaluate(x_test,  y_test, verbose=2)
-        # print('Total Model Accuracy:', self.test_acc)
+        self.test_loss, self.test_acc, self.test_f1, self.test_F1  = self.model.evaluate(x_test,  y_test, verbose=2)
+        print('Final Model Accuracy:', self.test_acc)
+        print('Final Model F1 Score:', self.test_F1)
 
         print("Best Validation Accuracy: ", max(self.history.history["val_accuracy"]))
 
