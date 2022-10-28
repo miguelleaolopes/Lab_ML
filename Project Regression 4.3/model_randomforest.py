@@ -15,11 +15,28 @@ class RansomForestModel:
         self.y_pred = self.model.predict(x_test)
 
     def calculate_score(self):
-        serfc_cv_score = cross_val_score(self.model, x_test, y_test, cv=10, scoring='f1')
+        self.score = cross_val_score(self.model, x_test, y_test, cv=10, scoring='f1')
+
+    def print_scores(self):
+        print("=== Confusion Matrix ===")
+        print(confusion_matrix(y_test, y_pred))
+        print('\n')
+        print("=== Classification Report ===")
+        print(classification_report(y_test, y_pred))
+        print('\n')
+        print("=== All AUC Scores ===")
+        print(self.score)
+        print('\n')
+        print("=== Mean AUC Score ===")
+        print("Mean AUC Score - Random Forest: ", self.score.mean())
 
 
 
-    
+mod = RansomForestModel
+mod.fit()
+mod.predict()
+mod.calculate_score()
+mod.print_scores()
 
 
 
