@@ -40,9 +40,13 @@ class model:
                 self.model.compile (optimizer = RMSprop(learning_rate=0.0001),
                                     loss = 'binary_crossentropy',
                                     metrics = ['acc'])
-
-            self.history = self.model.fit(x_train, y_train, epochs=epoch, 
-                        validation_data=(x_test, y_test),callbacks=calls)
+            if self.data_augmentation == True:
+                train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rotation_range=5,  # rotation
+                                zoom_range=0.2,  # zoom
+                                horizontal_flip=True) # horizontal flip                             
+                self.history = self.model.fit(train_datagen.flow(x_train, y_train), epochs=epoch, validation_data=(x_test, y_test),callbacks=calls)
+            else:
+                self.history = self.model.fit(x_train, y_train, epochs=epoch, validation_data=(x_test, y_test),callbacks=calls)
         else:
             "Layers not defined, please define valid layers and compiler first"
 
@@ -134,9 +138,7 @@ class model:
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
 
-
-        ## ------------------------------------
-        ## With Dropout layers - strides 2
+        ## With Dropout layers
         if layers_ind == "with_dropout":
             self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
@@ -168,33 +170,138 @@ class model:
         ## With Dropout layers - strides = 1, 
         if layers_ind == "with_dropout_2":
             ## Try: kernel_regularizer= L2??
-            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same", kernel_regularizer='l2',input_shape=(30, 30, 3)))
-            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding="same", kernel_regularizer='l2'))
-            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            self.model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="same", kernel_regularizer='l2'))
+            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="valid"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Flatten())
             
-            self.model.add(layers.Dense(256, activation='relu', kernel_regularizer='l2'))
+            self.model.add(layers.Dense(256, activation='relu'))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Dense(128, activation='relu', kernel_regularizer='l2'))
+            self.model.add(layers.Dense(128, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+        ## With Dropout layers - strides = 1, 
+        if layers_ind == "with_dropout_3":
+            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding="valid"))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(256, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(128, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+        ## With Dropout layers - strides = 1, 
+        if layers_ind == "with_dropout_4":
+            self.model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="valid"))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(256, (3, 3), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(512, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(256, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+        
+        ## ------------------------------------
+        if layers_ind == "LeNet":
+            ## Try: kernel_regularizer= L2??
+            self.model.add(layers.Conv2D(16, (5, 5), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), strides=2, padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(32, (5, 5), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.MaxPooling2D((2, 2), strides=2, padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(64, (4, 4), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(32, activation='relu'))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
 
 
+        ## ------------------------------------
+        if layers_ind == "Test1":
+            ## Try: kernel_regularizer= L2??
+            self.model.add(layers.Conv2D(20, (3, 3), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), strides=1, padding="same"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(40, (5, 5), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.MaxPooling2D((2, 2), strides=1, padding="valid"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(60, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(30, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+
+        
         ## ------------------------------------
         if layers_ind == "alexnet":
             self.model.add(layers.Conv2D(filters=96, kernel_size=(11, 11), strides=(4, 4), activation="relu", input_shape=(30, 30, 3),padding='same'))
