@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from keras.utils import plot_model
 import tensorflow as tf
 from tensorflow import keras
+import keras.backend as K
+from tensorflow_addons.metrics import F1Score
 from keras import datasets, layers, models
 from colorsys import hsv_to_rgb
 from PIL import Image
@@ -36,3 +38,14 @@ def convert_npy_to_image(x,y):
             img.save('images/spot/pic{}.png'.format(i))
 
     print('done')
+
+# Create F1Score function
+
+def get_f1(y_true, y_pred): #taken from old keras source code
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    recall = true_positives / (possible_positives + K.epsilon())
+    f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
+    return f1_val
