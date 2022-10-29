@@ -59,7 +59,8 @@ best_model = load_model(model_loc, custom_objects={"F1_Score": F1_Score,"get_f1"
 
 X_TEST = np.reshape(np.load('data/Xtest_Classification1.npy'),(8273,30,30,3)) / 255.0
 y_pred = best_model.predict(X_TEST)
-np.save('data/y_pred.npy', y_pred)
+y_pred_bin = np.reshape(np.rint(y_pred),(np.shape(y_pred)[0]))
+np.save('data/y_pred.npy', y_pred_bin)
 print ('Y prediction saved')
 
 
