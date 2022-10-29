@@ -13,11 +13,11 @@ my_callbacks = [
 model_used = "LeNet"
 model_used = "without_dropout"
 model_used = "with_dropout_3"
-model_used = "with_dropout_4"
 model_used = "with_dropout"
 model_used = "with_dropout_2"
 model_used = "with_dropout_5"
 model_used = "with_dropout_6"
+model_used = "with_dropout_4"
 
 m2 = model(data_augmentation=True) #data_augmentation=data_augmentations
 m2.layers(model_used)
