@@ -57,7 +57,9 @@ print('##### Model Created #####')
 model_loc = './run/model_best.h5'
 best_model = load_model(model_loc, custom_objects={"F1_Score": F1_Score,"get_f1": get_f1}) 
 
-X_TEST = np.reshape(np.load('data/Xtest_Classification1.npy'),(8273,30,30,3)) / 255.0
+X_TEST = np.load('data/Xtest_Classification1.npy')
+X_TEST = np.reshape(X_TEST,(np.shape(X_TEST)[0],30,30,3)) / 255.0
+print('X_TEST Shape:',np.shape(X_TEST))
 y_pred = best_model.predict(X_TEST)
 y_pred_bin = np.reshape(np.rint(y_pred),(np.shape(y_pred)[0]))
 np.save('data/y_pred.npy', y_pred_bin)
