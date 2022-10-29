@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split, cross_val_score, RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+from sklearn import metrics
 
 global x_train, x_test, y_train, y_test 
 x_import = np.load('data/Xtrain_Classification1.npy')
@@ -39,7 +40,11 @@ class RandomForestModel:
         print("=== Mean AUC Score ===")
         print("Mean AUC Score - Random Forest: ", self.score.mean())
 
-
+    def calculate_metrics(self):
+        self.acc = metrics.accuracy_score(y_test, self.y_pred)
+        self.f1 = metrics.f1_score(y_test, self.y_pred)
+        print('=== Score F1:',self.f1)
+        print('== Score ACC:',self.acc)
 
 class RandomForestModelCV:
 
@@ -76,6 +81,12 @@ class RandomForestModelCV:
         print("=== Mean AUC Score ===")
         print("Mean AUC Score - Random Forest: ", self.score.mean())
 
+    def calculate_metrics(self):
+        self.acc = metrics.accuracy_score(y_test, self.y_pred)
+        self.f1 = metrics.f1_score(y_test, self.y_pred)
+        print('=== Score F1:',self.f1)
+        print('== Score ACC:',self.acc)
+
 
 
 mod = RandomForestModelCV()
@@ -84,7 +95,5 @@ mod.print_bestparameters()
 mod.predict()
 mod.calculate_score()
 mod.print_scores()
-
-
-
+mod.calculate_metrics()
 

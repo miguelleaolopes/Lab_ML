@@ -18,7 +18,7 @@ class model:
             if compiler == "adam_bin":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
                                     loss = "binary_crossentropy",
-                                    metrics = ['accuracy', get_f1,F1_Score()])
+                                    metrics = ['accuracy',get_f1, F1_Score()])
             if compiler == "adam_hinge":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
                                     loss = tf.keras.losses.Hinge(), ## To use Hinge the last activation needs to be a tanh
@@ -70,8 +70,8 @@ class model:
             plt.savefig("models_loss_epo/model_loss_"+ name + ".png")
         # plt.show()
         
-        plt.plot(self.history.history['get_f1'], label='get_f1')
-        plt.plot(self.history.history['val_get_f1'], label = 'val_get_f1')
+        plt.plot(self.history.history['f1_score'], label='f1_score')
+        plt.plot(self.history.history['val_f1_score'], label = 'val_f1_score')
         plt.xlabel('Epoch')
         plt.ylabel('F1 Score')
         plt.ylim([0.0, plt.ylim()[1]])
@@ -96,8 +96,8 @@ class model:
         plt.legend(loc='lower right')
         plt.subplots_adjust(left=0.06,bottom=0.1,right=0.94,top=0.94,wspace=0.16,hspace=0.2)
         plt.subplot(1, 3, 3)
-        plt.plot(self.history.history['get_f1'], label='get_f1')
-        plt.plot(self.history.history['val_get_f1'], label = 'val_get_f1')
+        plt.plot(self.history.history['f1_score'], label='f1_score')
+        plt.plot(self.history.history['val_f1_score'], label = 'val_f1_score')
         plt.xlabel('Epoch')
         plt.ylabel('F1 Score')
         plt.ylim([0.0, plt.ylim()[1]])
@@ -106,12 +106,30 @@ class model:
         plt.show()
 
     def show_acc_val(self):
-        self.test_loss, self.test_acc, self.test_f1, self.test_F1  = self.model.evaluate(x_test,  y_test, verbose=2)
+
+        model_loc = './run/model_best.h5'
+
+        self.best_model = load_model(model_loc, custom_objects={"F1_Score": F1_Score,"get_f1": get_f1}) 
+
+        self.y_pred = np.zeros(np.shape(x_test)[0])
+        print(np.shape(x_test))
+
+        for i in range(np.shape(x_test)[0]):
+            print(np.shape(x_test[i]))
+            print(self.best_model.predict(x_test[i]))
+            self.y_pred[i] = self.best_model.predict(x_test[i])
+
+        print(self.y_pred)
+        print(y_test)
+        print("=== Classification Report ===")
+        print(classification_report(y_test, self.y_pred))
+
+        self.test_loss, self.test_acc, self.test_f1, self.test_F1 = self.model.evaluate(x_test,  y_test, verbose=2)
         print('Final Model Accuracy:', self.test_acc)
         print('Final Model F1 Score:', self.test_f1)
 
         print("Best Validation Accuracy: ", max(self.history.history["val_accuracy"]))
-        print("Best F1Score Accuracy: ", max(self.history.history["val_get_f1"]))
+        print("Best F1Score Accuracy: ", max(self.history.history["val_f1_score"]))
 
     def layers(self,layers_ind=1):
         if layers_ind == 1:
