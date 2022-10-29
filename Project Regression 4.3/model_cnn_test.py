@@ -3,11 +3,6 @@ from model_cnn import *
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-# data_augmentations = keras.Sequential([
-#     tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
-#     tf.keras.layers.experimental.preprocessing.RandomRotation(0.1,input_shape = (30,30,3)),
-#     tf.keras.layers.experimental.preprocessing.RandomZoom(0.1)
-# ])
 
 
 my_callbacks = [

@@ -19,9 +19,8 @@ x_import = np.load('data/Xtrain_Classification1.npy')
 y_import = np.load('data/Ytrain_Classification1.npy')
 
 x_import = np.reshape(x_import,(8273,30,30,3))
+x_import = x_import/255.0
 x_train, x_test, y_train, y_test =  train_test_split(x_import, y_import, test_size=0.2)
-x_train, x_test = x_train / 255.0, x_test / 255.0
-
 
 # Basic Funtions
 
