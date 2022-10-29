@@ -1,0 +1,20 @@
+with_dropout_2 - 32/64/128/256/128 - padding = same
+
+Final Model Accuracy: 0.8743202686309814
+Final Model F1 Score: 0.8314419984817505
+Best Validation Accuracy:  0.8773413896560669
+Best F1Score Accuracy:  0.8353557586669922
+
+with_dropout - 16/32/64/64/32 - padding = same
+
+Final Model Accuracy: 0.8719033002853394
+Final Model F1 Score: 0.8166084289550781
+Best Validation Accuracy:  0.8833836913108826
+Best F1Score Accuracy:  0.8253723382949829
+
+Test2 - 15/30/60/60/30 - padding = same
+
+Final Model Accuracy: 0.8664652705192566
+Final Model F1 Score: 0.8150622248649597
+Best Validation Accuracy:  0.8797582983970642
+Best F1Score Accuracy:  0.8200002908706665
