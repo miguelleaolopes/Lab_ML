@@ -42,7 +42,7 @@ class model:
                 train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rotation_range=5,  # rotation
                                 zoom_range=0.2,  # zoom
                                 horizontal_flip=True) # horizontal flip                             
-                self.history = self.model.fit(train_datagen.flow(x_train, y_train), epochs=epoch, validation_data=(x_test, y_test),callbacks=calls)
+                self.history = self.model.fit(train_datagen.flow(x, y), epochs=epoch, validation_data=(x_test, y_test),callbacks=calls)
             else:
                 self.history = self.model.fit(x_train, y_train, epochs=epoch, validation_data=(x_test, y_test),callbacks=calls)
         else:
