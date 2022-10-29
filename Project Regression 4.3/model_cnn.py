@@ -112,18 +112,12 @@ class model:
         self.best_model = load_model(model_loc, custom_objects={"F1_Score": F1_Score,"get_f1": get_f1}) 
 
         self.y_pred = np.zeros(np.shape(x_test)[0])
-        print(np.shape(x_test))
+        self.y_pred = self.best_model.predict(x_test)
 
-        for i in range(np.shape(x_test)[0]):
-            x_test[i] = x_test[i].reshape((1,30,30,3))
-            print(np.shape(x_test[i]))
-            print(self.best_model.predict(x_test[i]))
-            self.y_pred[i] = self.best_model.predict(x_test[i])
+        self.y_pred_bin = np.reshape(np.rint(self.y_pred),(np.shape(self.y_pred)[0]))
 
-        print(self.y_pred)
-        print(y_test)
         print("=== Classification Report ===")
-        print(classification_report(y_test, self.y_pred))
+        print(classification_report(y_test, self.y_pred_bin))
 
         self.test_loss, self.test_acc, self.test_f1, self.test_F1 = self.model.evaluate(x_test,  y_test, verbose=2)
         print('Final Model Accuracy:', self.test_acc)
