@@ -198,7 +198,6 @@ class model:
 
         ## With Dropout layers - strides = 1, 32/64/128/256/128 - padding = same
         if layers_ind == "with_dropout_2":
-            ## Try: kernel_regularizer= L2??
             self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
@@ -278,10 +277,38 @@ class model:
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
-        
 
         ## ------------------------------------
-        if layers_ind == "Test1":
+        if layers_ind == "with_dropout_5":
+            ## Try: kernel_regularizer= L2??
+            self.model.add(layers.Conv2D(15, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(30, (3, 3), strides=1, activation='relu', padding="same"))
+            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Conv2D(60, (3, 3), strides=1, activation='relu', padding="same"))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Flatten())
+            
+            self.model.add(layers.Dense(60, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(30, activation='relu'))
+            self.model.add(layers.Dropout(0.2))
+            self.model.add(layers.BatchNormalization())
+
+            self.model.add(layers.Dense(1, activation="sigmoid"))
+        
+        ## ------------------------------------
+        if layers_ind == "with_dropout_6":
             self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
@@ -307,31 +334,29 @@ class model:
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
-
         ## ------------------------------------
-        if layers_ind == "Test2":
-            ## Try: kernel_regularizer= L2??
-            self.model.add(layers.Conv2D(15, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
+        if layers_ind == "with_dropout_6_l2":
+            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(30, (3, 3), strides=1, activation='relu', padding="same"))
+            self.model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding="same"))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(60, (3, 3), strides=1, activation='relu', padding="same"))
+            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="same"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Flatten())
             
-            self.model.add(layers.Dense(60, activation='relu'))
+            self.model.add(layers.Dense(256, activation='relu'))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Dense(30, activation='relu'))
+            self.model.add(layers.Dense(64, activation='relu'))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 

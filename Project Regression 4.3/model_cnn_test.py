@@ -7,7 +7,7 @@ my_callbacks = [
     tf.keras.callbacks.CSVLogger("run/training.log", separator=",", append=False),
     tf.keras.callbacks.EarlyStopping(patience=50,verbose=1,monitor='val_loss'), #change to 50 in the end 
     # tf.keras.callbacks.TensorBoard(log_dir='./logs'),
-    tf.keras.callbacks.ModelCheckpoint(filepath='run/model_best.h5', monitor='val_accuracy', mode='max', save_best_only=True)
+    tf.keras.callbacks.ModelCheckpoint(filepath='run/model_best.h5', monitor='val_f1_score', mode='max', save_best_only=True)
 ]
 
 model_used = "LeNet"
@@ -16,8 +16,8 @@ model_used = "with_dropout_3"
 model_used = "with_dropout_4"
 model_used = "with_dropout"
 model_used = "with_dropout_2"
-model_used = "Test2"
-model_used = "Test1"
+model_used = "with_dropout_5"
+model_used = "with_dropout_6"
 
 m2 = model(data_augmentation=True) #data_augmentation=data_augmentations
 m2.layers(model_used)
