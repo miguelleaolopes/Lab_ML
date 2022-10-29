@@ -108,7 +108,7 @@ class model:
     def show_acc_val(self):
         self.test_loss, self.test_acc, self.test_f1, self.test_F1  = self.model.evaluate(x_test,  y_test, verbose=2)
         print('Final Model Accuracy:', self.test_acc)
-        print('Final Model F1 Score:', self.test_F1)
+        print('Final Model F1 Score:', self.test_f1)
 
         print("Best Validation Accuracy: ", max(self.history.history["val_accuracy"]))
         print("Best F1Score Accuracy: ", max(self.history.history["val_get_f1"]))

@@ -18,3 +18,15 @@ Final Model Accuracy: 0.8664652705192566
 Final Model F1 Score: 0.8150622248649597
 Best Validation Accuracy:  0.8797582983970642
 Best F1Score Accuracy:  0.8200002908706665
+
+with_dropout - 16/32/64/64/32 - padding = same
+
+Final Model Accuracy: 0.8537764549255371
+Final Model F1 Score: 0.8210054039955139
+Best Validation Accuracy:  0.8646525740623474
+Best F1Score Accuracy:  0.8159646391868591
+
+Final Model Accuracy: 0.8706948757171631
+Final Model F1 Score: 0.8107877969741821
+Best Validation Accuracy:  0.8876132965087891
+Best F1Score Accuracy:  0.8373371958732605
