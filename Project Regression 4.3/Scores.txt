@@ -30,3 +30,22 @@ Final Model Accuracy: 0.8706948757171631
 Final Model F1 Score: 0.8107877969741821
 Best Validation Accuracy:  0.8876132965087891
 Best F1Score Accuracy:  0.8373371958732605
+
+with_dropout - 32/64/128/512/64 - padding = same
+
+Final Model Accuracy: 0.8622356653213501
+Final Model F1 Score: 0.8134200572967529
+Best Validation Accuracy:  0.8773413896560669
+Best F1Score Accuracy:  0.8279927372932434
+
+with_dropout - 32/64/128/256/64 - padding = same
+
+Final Model Accuracy: 0.8664652705192566
+Final Model F1 Score: 0.8244633674621582
+Best Validation Accuracy:  0.8737159967422485
+Best F1Score Accuracy:  0.831007182598114
+
+Final Model Accuracy: 0.8827794790267944
+Final Model F1 Score: 0.8432950973510742
+Best Validation Accuracy:  0.8870090842247009
+Best F1Score Accuracy:  0.8455816507339478
