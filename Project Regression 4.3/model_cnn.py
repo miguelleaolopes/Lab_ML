@@ -115,6 +115,7 @@ class model:
         print(np.shape(x_test))
 
         for i in range(np.shape(x_test)[0]):
+            x_test[i] = x_test[i].reshape((1,30,30,3))
             print(np.shape(x_test[i]))
             print(self.best_model.predict(x_test[i]))
             self.y_pred[i] = self.best_model.predict(x_test[i])
