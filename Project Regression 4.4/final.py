@@ -31,7 +31,7 @@ model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dropout(0.2))
 model.add(layers.BatchNormalization())
 
-model.add(layers.Dense(1, activation="sigmoid"))
+model.add(layers.Dense(num_classes, activation="softmax"))
 
 print('\n\n\n##### End of tensorflow rant ##########\n\n\n')
 

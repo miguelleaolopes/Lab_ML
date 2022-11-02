@@ -2,12 +2,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
-from keras.utils import plot_model
+from keras.utils import plot_model, to_categorical
 import tensorflow as tf
 from tensorflow import keras
 import keras.backend as K
 from keras import datasets, layers, models
-from keras.models import load_model 
+from keras.models import load_model  
 from colorsys import hsv_to_rgb
 from PIL import Image
 from sklearn.metrics import classification_report, confusion_matrix, balanced_accuracy_score
@@ -17,7 +17,7 @@ from sklearn.metrics import classification_report, confusion_matrix, balanced_ac
 x_import = np.load('data/Xtrain_Classification2.npy')
 y_import = np.load('data/Ytrain_Classification2.npy')
 
-# ----- Input -----
+# Input and Classes
 image_size = (5, 5)
 input_shape = image_size + (3,)
 
@@ -29,9 +29,12 @@ else:
     output_units = num_classes
     output_activation = "softmax"
 
+# Reshape and One-Hot Encoding 
 x_import =  np.reshape(x_import, (np.shape(x_import)[0],) + input_shape)
 x_import = x_import/255.0
-x_train, x_test, y_train, y_test =  train_test_split(x_import, y_import, test_size=0.2)
+y_import_onehot = to_categorical(y_import)
+x_train, x_test, y_train, y_test =  train_test_split(x_import, y_import_onehot, test_size=0.2)
+
 
 # Basic Funtions
 

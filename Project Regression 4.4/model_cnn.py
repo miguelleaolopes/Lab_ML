@@ -12,26 +12,17 @@ class model:
         print('##### Model Summary ##########')
         self.model.summary()
 
-    def compile(self,epoch,calls = None,compiler="adam_bin"):
+    def compile(self,epoch,calls = None,compiler="adam_bal"):
         
         if self.layers_defined:
-            if compiler == "adam_bin":
+            if compiler == "adam_bal":
                 self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
-                                    loss = "binary_crossentropy",
-                                    metrics = ['accuracy',BalancedSparseCategoricalAccuracy()])
-            if compiler == "adam_hinge":
-                self.model.compile(optimizer = tf.keras.optimizers.Adam(1e-3),
-                                    loss = tf.keras.losses.Hinge(), ## To use Hinge the last activation needs to be a tanh
-                                    metrics = ['accuracy',BalancedSparseCategoricalAccuracy()])
-            if compiler == "sgd_bin":
+                                    loss = tf.keras.losses.CategoricalCrossentropy(),
+                                    metrics = ['accuracy']) #,BalancedSparseCategoricalAccuracy()])
+            if compiler == "sgd_bal":
                 self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=1e-3),
-                                    loss = "binary_crossentropy",
+                                    loss = tf.keras.losses.CategoricalCrossentropy(),
                                     metrics = ['accuracy',BalancedSparseCategoricalAccuracy()])
-            if compiler == "alexnet":
-                self.model.compile(
-                                loss='binary_crossentropy', 
-                                optimizer=tf.optimizers.SGD(learning_rate=0.001), 
-                                metrics = ['accuracy',BalancedSparseCategoricalAccuracy()])
             
             if self.data_augmentation == True:
                 train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rotation_range=5,  # rotation
@@ -114,39 +105,28 @@ class model:
         print("=== Classification Report ===")
         print(classification_report(y_test, self.y_pred_bin))
 
-        self.test_loss, self.test_acc, self.test_f1, self.test_F1 = self.model.evaluate(x_test,  y_test, verbose=2)
+        self.test_loss, self.test_acc, self.test_BAAC = self.model.evaluate(x_test,  y_test, verbose=2)
         print('Final Model Accuracy:', self.test_acc)
-        print('Final Model F1 Score:', self.test_F1)
+        print('Final Model F1 Score:', self.test_BAAC)
 
         print("Best Validation Accuracy: ", max(self.history.history["val_accuracy"]))
         print("Best BAAC Accuracy: ", max(self.history.history["val_balanced_sparse_categorical_accuracy"]))
 
     def layers(self,layers_ind=1):
-        if layers_ind == 1:
-            self.model.add(layers.Conv2D(30, (3, 3), activation='relu', input_shape=(30, 30, 3)))
-            self.model.add(layers.MaxPooling2D((2, 2)))
-            self.model.add(layers.Conv2D(60, (3, 3), activation='relu'))
-            self.model.add(layers.MaxPooling2D((2, 2)))
-            self.model.add(layers.Conv2D(60, (3, 3), activation='relu'))
-            self.model.add(layers.Flatten())
-            self.model.add(layers.Dense(60, activation='relu'))
-            self.model.add(layers.Dense(10))
-            self.model.add(layers.Dense(1, activation="sigmoid"))
-
         ## ------------------------------------
-        ## Without Dropout layers
-        if layers_ind == "without_dropout":
-            self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
+        ## task3_model Without Dropout layers
+        if layers_ind == "task3_model_dropout":
+            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same", input_shape=input_shape))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding="same"))
+            self.model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding="same"))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="same"))
+            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="same"))
             # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
@@ -156,44 +136,15 @@ class model:
             # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Dense(128, activation='relu'))
+            self.model.add(layers.Dense(64, activation='relu'))
             # self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
             self.model.add(layers.Dense(1, activation="sigmoid"))
 
-        ## With Dropout layers
-        if layers_ind == "with_dropout":
-            self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="same", input_shape=(30, 30, 3)))
-            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
-            self.model.add(layers.Dropout(0.2))
-            self.model.add(layers.BatchNormalization())
-
-            self.model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding="same"))
-            self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
-            self.model.add(layers.Dropout(0.2))
-            self.model.add(layers.BatchNormalization())
-
-            self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="same"))
-            self.model.add(layers.Dropout(0.2))
-            self.model.add(layers.BatchNormalization())
-
-            self.model.add(layers.Flatten())
-            
-            self.model.add(layers.Dense(256, activation='relu'))
-            self.model.add(layers.Dropout(0.2))
-            self.model.add(layers.BatchNormalization())
-
-            self.model.add(layers.Dense(128, activation='relu'))
-            self.model.add(layers.Dropout(0.2))
-            self.model.add(layers.BatchNormalization())
-
-            self.model.add(layers.Dense(1, activation="sigmoid"))
-
-
-        ## With Dropout layers - strides = 1, 32/64/128/256/128 - padding = same
-        if layers_ind == "with_dropout_2":
-            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same",input_shape=(30, 30, 3)))
+        ## task3_model - strides = 1, 32/64/128/256/128 - padding = same
+        if layers_ind == "task3_model":
+            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="same",input_shape=input_shape))
             self.model.add(layers.MaxPooling2D((2, 2), padding="same"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
@@ -213,14 +164,15 @@ class model:
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Dense(128, activation='relu'))
+            self.model.add(layers.Dense(64, activation='relu'))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Dense(1, activation="sigmoid"))
-        ## With Dropout layers - strides = 1/2, 32/64/128/256/128 - padding = valid
-        if layers_ind == "with_dropout_3":
-            self.model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding="valid",input_shape=(30, 30, 3)))
+            self.model.add(layers.Dense(3, activation="softmax"))
+
+        ## task3_model - strides = 2, 32/64/128/256/128 - padding = valid
+        if layers_ind == "new_1":
+            self.model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding="valid",input_shape=input_shape))
             self.model.add(layers.MaxPooling2D((2, 2), padding="valid"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
@@ -230,7 +182,7 @@ class model:
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
-            self.model.add(layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding="valid"))
+            self.model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding="valid"))
             self.model.add(layers.Dropout(0.2))
             self.model.add(layers.BatchNormalization())
 
