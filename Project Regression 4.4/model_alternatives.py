@@ -17,8 +17,9 @@ y_import = np.load('data/Ytrain_Classification2.npy')
 
 class alternative_model:
 
-    def __init__(self, model_type, n_splits = 10):
-
+    def __init__(self, model_type='RandomForest', n_splits = 10):
+        self.model_type = model_type
+        print('Created {} model with {} splits'.format(model_type, n_splits))
         if model_type == 'Balanced Bagging':
             self.model = BalancedBaggingClassifier()
         elif model_type == 'Bagging':
@@ -29,13 +30,16 @@ class alternative_model:
         self.n_splits = n_splits 
 
     def test_model(self, cv_type='KFold'):
+
+        print('Testing {} with cv {}'.format(self.model_type,cv_type))
         self.cv_type = cv_type
 
         if self.cv_type == 'KFold':
             self.cv = KFold(self.n_splits)
-            self.scores = cross_validate(self.model, x_import, y_import , scoring={'accuracy':'accuracy','baccuracy': bca_scorer ,'kappa':kappa_scorer}, cv=self.cv, n_jobs=-1)
+            self.scoring = {'accuracy':'accuracy','baccuracy': bca_scorer ,'kappa':kappa_scorer}
+            self.scores = cross_validate(self.model, x_import, y_import , scoring=self.scoring, cv=self.cv, n_jobs=-1)
         
-        if self.cv_type == 'RepeatedStratifiedKFold':
+        elif self.cv_type == 'RepeatedStratifiedKFold':
             # Does not support multiclassification
             self.cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
         
@@ -43,12 +47,27 @@ class alternative_model:
             print('CV type not supported')
             quit()
 
-        print('Mean Accuracy {}\n Mean Accuracy: {}\n Mean Kappa: {}'.format(mean(self.scores['test_accuracy']),mean(self.scores['test_baccuracy']),mean(self.scores['test_kappa'])))
+        print('\n\n {} Results ======'.format(self.mode_type))
+        print('\n Mean Accuracy {}\n Mean Balenced Accuracy: {}\n Mean Kappa: {}'.format(mean(self.scores['test_accuracy']),mean(self.scores['test_baccuracy']),mean(self.scores['test_kappa'])))
 
 
-model1 = alternative_model(
-                        model_type = 'KFold',
-                        n_splits = 15
-                        )
+modelRF = alternative_model(
+    model_type = 'RandomForest',
+    n_splits = 15
+    )
 
-model1.test_model()
+modelBB = alternative_model(
+    model_type ='Balanced Bagging',
+    n_splits = 15
+    )
+
+modelB = alternative_model(
+    model_type = 'Bagging',
+    n_splits = 15
+)
+
+
+
+modelRF.test_model()
+modelBB.test_model()
+modelB.test_model()
