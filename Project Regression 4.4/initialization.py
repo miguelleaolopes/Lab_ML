@@ -55,13 +55,13 @@ def convert_npy_to_image(x,y):
     print('done')
 
 # Create Balanced Accuracy
-
+## Not Working
 class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy):
     def __init__(self, name='balanced_sparse_categorical_accuracy', dtype=None):
         super().__init__(name, dtype=dtype)
 
     def update_state(self, y_true, y_pred, sample_weight=None):
-        y_flat = y_true
+        y_flat = tf.math.argmax(y_true, axis=-1)  # y_flat = y_true
         if y_true.shape.ndims == y_pred.shape.ndims:
             y_flat = tf.squeeze(y_flat, axis=[-1])
         y_true_int = tf.cast(y_flat, tf.int32)
