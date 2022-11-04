@@ -43,8 +43,12 @@ class alternative_model:
             print('CV type not supported')
             quit()
 
-        print('Mean Accuracy {}\n Mean Accuracy: {}\n Mean Kappa: {}'.format(mean(scores['test_accuracy']),mean(scores['test_baccuracy']),mean(scores['test_kappa'])))
+        print('Mean Accuracy {}\n Mean Accuracy: {}\n Mean Kappa: {}'.format(mean(self.scores['test_accuracy']),mean(self.scores['test_baccuracy']),mean(self.scores['test_kappa'])))
 
 
+model1 = alternative_model(
+                        model_type = 'KFold',
+                        n_splits = 15
+                        )
 
-
+model1.test_model()
