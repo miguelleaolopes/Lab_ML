@@ -43,6 +43,8 @@ def show_images(x,y,index):
     plt.imshow(x[index])
     plt.show()
 
+for i in range(1000): show_images(x_import,y_import,i)
+
 
 def convert_npy_to_image(x,y):
     for i in range(np.shape(x)[0]):
