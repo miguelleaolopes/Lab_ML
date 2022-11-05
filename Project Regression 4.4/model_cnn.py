@@ -256,6 +256,6 @@ class model:
             outputs = layers.Conv2D(3, 1, padding="same", activation = "softmax")(u9)
             # unet model with Keras Functional API
             self.model = tf.keras.Model(inputs, outputs, name="U-Net")
-
+            
         self.layers_defined = True
     
