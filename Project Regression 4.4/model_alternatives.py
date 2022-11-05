@@ -4,8 +4,11 @@ from sklearn.svm import SVC
 from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score, cross_validate, RepeatedStratifiedKFold, KFold
 from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
-from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier
 from sklearn.metrics import cohen_kappa_score, make_scorer, balanced_accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 
 
 kappa_scorer = make_scorer(cohen_kappa_score)
@@ -18,13 +21,14 @@ y_import = np.load('data/Ytrain_Classification2.npy')
 
 class alternative_model:
 
-    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0):
+    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0, n_neighbors = 0):
         '''
         model_type -> Specifies the model we want to use
         n_splits -> Necessary for all
         class_weights -> Necesary for Random Forest ['balanced', 'balanced_subsample']
         kernel -> Necessary for svf ['rbf','poly','linear']
         gamma -> Necessary for svf
+        n_neighbors -> Necessary for KNN 
         '''
 
 
@@ -47,6 +51,22 @@ class alternative_model:
             self.kernel = kernel
             self.gamma = gamma
             self.model = SVC(kernel=kernel,gamma=gamma)
+
+        elif model_type == 'Decision Tree':
+            self.model = DecisionTreeClassifier()
+
+        elif model_type == 'KNN':
+            print('Using {} n_neighbors'.format(n_neighbors))
+            self.n_neighbors  = n_neighbors
+            self.model = KNeighborsClassifier(n_neighbors = self.n_neighbors)
+
+        elif model_type == 'GNBC':
+            #Gaussian Naive Bayes classifier
+            self.model = GaussianNB()
+        
+        else:
+            print('Model type does not exist')
+            quit()
         
         self.n_splits = n_splits 
 
@@ -124,12 +144,29 @@ def find_best_svm_gamma(gammas):
 #     gamma=0.01
 # )
 
+# modelDT = alternative_model(
+#     model_type='Decision Tree',
+#     n_splits = 15
+# )
+
+# modelKNN = alternative_model(
+#     model_type='KNN',
+#     n_splits = 15,
+#     n_neighbors = 3
+# )
+
+modelGNBC = alternative_model(
+    model_type='GNBC',
+    n_splits=15
+)
 
 # modelB.test_model()
 # modelBB.test_model()
 # modelRF.test_model()
 # modelBRF.test_model()
-
+# modelDT.test_model()
+# modelKNN.test_model()
+modelGNBC.test_model()
 
     
-find_best_svm_gamma(np.linspace(0.001,0.1,5))
+# find_best_svm_gamma(np.linspace(0.001,0.1,5))
