@@ -11,7 +11,7 @@ from keras.models import load_model
 from colorsys import hsv_to_rgb
 from PIL import Image
 from sklearn.metrics import classification_report, confusion_matrix, balanced_accuracy_score
-
+from sklearn import metrics
 
 # Import lists
 x_import = np.load('data/Xtrain_Classification2.npy')
@@ -43,7 +43,7 @@ def show_images(x,y,index):
     plt.imshow(x[index])
     plt.show()
 
-for i in range(1000): show_images(x_import,y_import,i)
+# for i in range(1000): show_images(x_import,y_import,i)
 
 
 def convert_npy_to_image(x,y):
@@ -58,17 +58,29 @@ def convert_npy_to_image(x,y):
 
 # Create Balanced Accuracy
 ## Not Working
-class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy):
-    def __init__(self, name='balanced_sparse_categorical_accuracy', dtype=None):
-        super().__init__(name, dtype=dtype)
+def balanced_accuracy(y_true,y_pred, sample_weight=None, adjusted=False):
+    y_true= y_true.numpy()
+    y_pred= y_pred.numpy()
+    y_pred2=[np.argmax(i) for i in y_pred]
+    y_true2=[np.argmax(i) for i in y_true]
+    # C = confusion_matrix(y_true2, y_pred2, sample_weight=sample_weight)
+    # with np.errstate(divide="ignore", invalid="ignore"):
+    #     per_class = np.diag(C) / C.sum(axis=1)
+    #     per_class = per_class[~np.isnan(per_class)]
+    # score = np.mean(per_class)
+    # if adjusted:
+    #     n_classes = len(per_class)
+    #     chance = 1 / n_classes
+    #     score -= chance
+    #     score /= 1 - chance
+    # return score
+    return balanced_accuracy_score(y_true2,y_pred2)
 
-    def update_state(self, y_true, y_pred, sample_weight=None):
-        y_flat = tf.math.argmax(y_true, axis=-1)  # y_flat = y_true
-        if y_true.shape.ndims == y_pred.shape.ndims:
-            y_flat = tf.squeeze(y_flat, axis=[-1])
-        y_true_int = tf.cast(y_flat, tf.int32)
-
-        cls_counts = tf.math.bincount(y_true_int)
-        cls_counts = tf.math.reciprocal_no_nan(tf.cast(cls_counts, self.dtype))
-        weight = tf.gather(cls_counts, y_true_int)
-        return super().update_state(y_true, y_pred, sample_weight=weight)
+# def balanced_accuracy_2(y_true, y_pred): #taken from old keras source code
+#     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+#     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+#     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+#     precision = true_positives / (predicted_positives + K.epsilon())
+#     recall = true_positives / (possible_positives + K.epsilon())
+#     f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
+#     return f1_val
