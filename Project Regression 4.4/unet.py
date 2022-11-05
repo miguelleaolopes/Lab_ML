@@ -8,5 +8,4 @@ y_import = np.load('data/Ytrain_Classification2.npy')
 
 for i in range(0,np.shape(x_import)[0]-676,676):
     image = reconstruct_from_patches_2d(x_import[i:i+676],(30,30,3))
-    plt.imshow(image)
-    plt.show()
+    print(np.shape(image))
