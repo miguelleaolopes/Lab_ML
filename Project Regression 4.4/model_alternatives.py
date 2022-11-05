@@ -9,6 +9,9 @@ from sklearn.tree import DecisionTreeClassifier
 from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
+from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.image import reconstruct_from_patches_2d, extract_patches_2d
 
 
 kappa_scorer = make_scorer(cohen_kappa_score)
@@ -21,7 +24,7 @@ y_import = np.load('data/Ytrain_Classification2.npy')
 
 class alternative_model:
 
-    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0, n_neighbors = 0):
+    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0, n_neighbors = 0, manual_random_oversampling = 'None'):
         '''
         model_type -> Specifies the model we want to use
         n_splits -> Necessary for all
@@ -32,20 +35,58 @@ class alternative_model:
         '''
 
 
-
+        
         self.model_type = model_type
         print('Created {} model with {} n_splits'.format(model_type, n_splits))
+        global x_import, y_import
+
+        if manual_random_oversampling == 'RandomOverSampler':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample = RandomOverSampler().fit_resample(x_import, y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+        
+        elif manual_random_oversampling == 'SMOTE':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample = SMOTE().fit_resample(x_import, y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+
+        elif manual_random_oversampling == 'ADASYN':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample =  ADASYN().fit_resample(x_import,y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            
+            
+
+
+
         if model_type == 'Balanced Bagging':
-            self.model = BalancedBaggingClassifier()
+            self.model = BalancedBaggingClassifier(
+                sampling_strategy='auto'
+            )
         
         elif model_type == 'Bagging':
             self.model = BaggingClassifier()
         
         elif model_type == 'Random Forest':
-            self.model = RandomForestClassifier(n_estimators=10, class_weight=class_weight)
+            self.model = RandomForestClassifier(
+                n_estimators=10, 
+                class_weight=class_weight
+                )
 
         elif model_type == 'Balanced Random Forest':
-            self.model = BalancedRandomForestClassifier(n_estimators=10, class_weight=class_weight)
+            self.model = BalancedRandomForestClassifier(
+                n_estimators=10, 
+                class_weight=class_weight
+                )
 
         elif model_type == 'svm':
             self.kernel = kernel
@@ -79,6 +120,7 @@ class alternative_model:
             self.cv = KFold(self.n_splits)
             self.scoring = {'accuracy':'accuracy','baccuracy': bca_scorer ,'kappa':kappa_scorer}
             self.scores = cross_validate(self.model, x_import, y_import , scoring=self.scoring, cv=self.cv, n_jobs=-1)
+            # self.scores = cros_validate(self.model, x_import, y_import , scoring=self.scoring, cv=self.cv, n_jobs=-1)
         
         elif self.cv_type == 'RepeatedStratifiedKFold':
             # Does not support multiclassification
@@ -122,7 +164,8 @@ def find_best_svm_gamma(gammas):
 
 # modelBB = alternative_model(
 #     model_type ='Balanced Bagging',
-#     n_splits = 15
+#     n_splits = 15,
+#     manual_random_oversampling=True
 #     )
 
 # modelRF = alternative_model(
@@ -131,11 +174,12 @@ def find_best_svm_gamma(gammas):
 #     class_weight='balanced'
 #     )
 
-# modelBRF = alternative_model(
-#     model_type = 'Balanced Random Forest',
-#     n_splits = 15,
-#     class_weight='balanced'
-# )
+modelBRF = alternative_model(
+    model_type = 'Balanced Random Forest',
+    n_splits = 15,
+    class_weight='balanced',
+    manual_random_oversampling='ADASYN'
+)
 
 # modelSVM = alternative_model(
 #     model_type = 'svm',
@@ -155,10 +199,10 @@ def find_best_svm_gamma(gammas):
 #     n_neighbors = 3
 # )
 
-modelGNBC = alternative_model(
-    model_type='GNBC',
-    n_splits=15
-)
+# modelGNBC = alternative_model(
+#     model_type='GNBC',
+#     n_splits=15
+# )
 
 # modelB.test_model()
 # modelBB.test_model()
@@ -166,7 +210,38 @@ modelGNBC = alternative_model(
 # modelBRF.test_model()
 # modelDT.test_model()
 # modelKNN.test_model()
-modelGNBC.test_model()
-
-    
+# modelGNBC.test_model()
 # find_best_svm_gamma(np.linspace(0.001,0.1,5))
+
+print(np.shape(x_import))
+modelBRF.model.fit(x_import,y_import)
+ypred = modelBRF.model.predict(x_import)
+
+
+x_import = np.reshape(x_import,(np.shape(x_import)[0],5,5,3))
+ypred = np.reshape(ypred,(np.shape(x_import)[0],1,1))
+y_import = np.reshape(ypred,(np.shape(x_import)[0],1,1))
+
+
+x_import_reconstructed = np.zeros((int(np.shape(x_import)[0]/26/26),26,26,3))
+ypred_reconstructed = np.zeros((int(np.shape(x_import)[0]/26/26),26,26))
+y_import_reconstructed = np.zeros((int(np.shape(x_import)[0]/26/26),26,26))
+
+for i in range(0,int(np.shape(x_import)[0]/26/26)):
+    image = reconstruct_from_patches_2d(x_import[i*676:(i+1)*676],(30,30,3))[2:28,2:28]
+    y_image = reconstruct_from_patches_2d(y_import[i*676:(i+1)*676],(26,26))
+    ypred_image = reconstruct_from_patches_2d(ypred[i*676:(i+1)*676],(26,26))
+    x_import_reconstructed[i] = image
+    y_import_reconstructed[i] = y_image
+    ypred_reconstructed[i] = ypred_image
+
+def show_images(x,y,z,index):
+    plt.subplot(1,3,1)
+    plt.imshow(x[index])
+    plt.subplot(1,3,2)
+    plt.imshow(y[index])
+    plt.subplot(1,3,3)
+    plt.imshow(z[index])
+    plt.show()
+
+for i in range(100,110): show_images(x_import_reconstructed,y_import_reconstructed,ypred_reconstructed,i)

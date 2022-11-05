@@ -112,3 +112,4 @@ def upsample_block(x, conv_features, n_filters):
    # Conv2D twice with ReLU activation
    x = double_conv_block(x, n_filters)
    return x
+
