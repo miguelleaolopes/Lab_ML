@@ -248,13 +248,11 @@ for i in range(0,int(np.shape(x_test)[0]/26/26)):
     ypred_reconstructedBRF[i] = yBRF_image
     
 
-def show_images(x,y,z,index):
-    plt.subplot(1,3,1)
+def show_images(x,y,index):
+    plt.subplot(1,2,1)
     plt.imshow(x[index])
-    plt.subplot(1,3,2)
+    plt.subplot(1,2,2)
     plt.imshow(y[index])
-    plt.subplot(1,3,3)
-    plt.imshow(z[index])
     plt.show()
 
-for i in range(0,50): show_images(x_test_reconstructed,ypred_reconstructedBB,ypred_reconstructedBRF,i)
+for i in range(0,50): show_images(x_test_reconstructed,ypred_reconstructedBRF,i)
