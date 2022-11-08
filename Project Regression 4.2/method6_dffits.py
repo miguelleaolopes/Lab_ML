@@ -7,7 +7,7 @@ import statsmodels.api as sm
 
 class method6_dffits:
 
-    def __init__(self,silent=True,show_plt=False, thd_type='theoretical',N_val=200,alpha_list = np.linspace(0.001,2,100)):
+    def __init__(self,silent=True,show_plt=False, thd_type='default',N_val=200,alpha_list = np.linspace(0.001,2,100)):
         self.silent = silent
         self.show_plt = show_plt
         self.outliers_removed = False
