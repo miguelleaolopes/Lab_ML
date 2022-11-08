@@ -17,6 +17,8 @@ x_import = np.load("data/Xtrain_Regression2.npy")
 y_import = np.load("data/Ytrain_Regression2.npy")
 x_train,y_train,x_test,y_test, x_train_s, x_test_s = [], [], [], [], [], []
 
+
+
 # Essential functions
 def split_data(x,y,N_list,test_size):
 

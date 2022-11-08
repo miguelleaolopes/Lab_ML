@@ -4,7 +4,8 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import matplotlib.pyplot as plt   
+import matplotlib.pyplot as plt
+ 
 
 
 x_import = np.load('data/Xtrain_Classification2.npy')/255.0

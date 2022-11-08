@@ -1,48 +1,83 @@
-from sklearn import svm
 import numpy as np
+from numpy import mean
 from matplotlib import pyplot as plt
-from sklearn import metrics
-from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.image import reconstruct_from_patches_2d
+from sklearn.svm import SVC
+from sklearn.datasets import make_classification
+from sklearn.model_selection import cross_val_score, cross_validate, train_test_split, RepeatedStratifiedKFold, KFold, GridSearchCV
+from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
+from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier
+from sklearn.metrics import cohen_kappa_score, make_scorer, balanced_accuracy_score
+import pandas as pd
+import winsound
 
-global x_train, x_test, y_train, y_test 
-x_import = np.load('data/Xtrain_Classification1.npy')
-y_import = np.load('data/Ytrain_Classification1.npy')
-x_train, x_test, y_train, y_test =  train_test_split(x_import, y_import, test_size=0.2)
-x_train, x_test = x_train / 255.0, x_test / 255.0
+kappa_scorer = make_scorer(cohen_kappa_score)
+bca_scorer = make_scorer(balanced_accuracy_score)
 
 
+x_import = np.load('data/Xtrain_Classification2.npy')/255.0
+y_import = np.load('data/Ytrain_Classification2.npy')
 
-class svm_model:
 
-    def __init__(self,kernel,gamma='auto'):
-        self.model = svm.SVC(kernel=kernel,gamma=gamma)
+rows = np.shape(x_import)[0]
+colls = np.shape(x_import)[1]
+
+x_import_small = x_import[0:int(rows),:]
+y_import_small= y_import[0:int(rows)]
+
+def test_model(gammas=np.linspace(0.1, 1, 2), Cs = np.linspace(1, 10, 2)):
+
+    print('Testing SVM with GridSearchCV')
+    
+    scoring = {'accuracy':'accuracy','baccuracy': bca_scorer ,'kappa':kappa_scorer}
+    param_grid = {'C': (Cs), 
+        'gamma': (gammas),
+        'kernel': ['rbf']} # rbf
+    grid = GridSearchCV(SVC(class_weight= 'balanced'), param_grid, refit = "baccuracy", verbose = 3, scoring=scoring, cv= KFold(shuffle = True), n_jobs=-1)
+    fit = grid.fit(x_import_small, y_import_small)
     
 
-    def fit(self):
-        self.model.fit(x_train, y_train)
-    
-    def predict(self):
-        self.y_pred = self.model.predict(x_test)
+    print('\n\n GridSearchCV Results ======')
+    results = pd.DataFrame(fit.cv_results_)
+    print("List of BAcc:",results["mean_test_baccuracy"])
+    print('\n Mean Accuracy {}\n Mean Balenced Accuracy: {}\n Mean Kappa: {}\n'.format(results["mean_test_accuracy"][fit.best_index_],results["mean_test_baccuracy"][fit.best_index_],results["mean_test_kappa"][fit.best_index_]))
+    print('Best Hyperparameters: %s' % fit.best_params_)
 
-    def calculate_metrics(self):
-        self.acc = metrics.accuracy_score(y_test, self.y_pred)
-        self.f1 = metrics.f1_score(y_test, self.y_pred)
-        
-
-gammas = np.linspace(0.0001,.01,5)
-
-for gamma  in gammas:
-    # model = svm_model(kernel='poly')
-    # model = svm_model(kernel='linear')
-    model = svm_model(kernel='rbf',gamma=gamma)
-
-    model.fit()
-    model.predict()
-    model.calculate_metrics()
-
-    print('=== Gamma:', gamma)
-    print('=== Score F1:',model.f1)
-    print('== Score ACC:',model.acc)
+    return fit
 
 
-    
+fit_train = test_model(gammas = np.linspace(0.6, 0.6, 1), Cs = np.linspace(1, 1, 1))
+
+
+x_final_test = np.load('data/Xtest_Classification2.npy')/255.0
+
+y_final_test = fit_train.best_estimator_.predict(x_final_test)
+
+print("Y_pred:", np.shape(y_final_test))
+np.save("data/y_pred.npy",y_final_test)
+
+x_final_test = np.reshape(x_final_test,(33800,5,5,3))
+y_final_test = np.reshape(y_final_test,(33800,1,1))
+x_final_test_reconstructed = np.zeros((50,26,26,3))
+y_final_test_reconstructed = np.zeros((50,26,26))
+
+for i in range(0,49):
+    image = reconstruct_from_patches_2d(x_final_test[i*676:(i+1)*676],(30,30,3))[2:28,2:28]
+    y_image = reconstruct_from_patches_2d(y_final_test[i*676:(i+1)*676],(26,26))
+    x_final_test_reconstructed[i] = image
+    y_final_test_reconstructed[i] = y_image
+
+def show_images(x,y,index):
+    plt.subplot(1,2,1)
+    plt.imshow(x[index])
+    plt.subplot(1,2,2)
+    plt.imshow(y[index])
+    plt.show()
+
+print()
+for i in range(50): show_images(x_final_test_reconstructed,y_final_test_reconstructed,i)
+
+
+duration = 2000  # milliseconds
+freq = 440  # Hz
+winsound.Beep(freq, duration)
