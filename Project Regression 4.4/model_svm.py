@@ -46,7 +46,7 @@ def test_model(gammas=np.linspace(0.1, 1, 2), Cs = np.linspace(1, 10, 2)):
     return fit
 
 
-fit_train = test_model(gammas = np.linspace(0.8, 0.8, 1), Cs = np.linspace(1, 1, 1))
+fit_train = test_model(gammas = np.linspace(0.6, 0.6, 1), Cs = np.linspace(1, 1, 1))
 
 
 x_final_test = np.load('data/Xtest_Classification2.npy')/255.0

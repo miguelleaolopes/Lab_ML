@@ -17,6 +17,9 @@ from sklearn import metrics
 x_import = np.load('data/Xtrain_Classification2.npy')
 y_import = np.load('data/Ytrain_Classification2.npy')
 
+
+print(np.shape(x_import))
+
 # Input and Classes
 image_size = (5, 5)
 input_shape = image_size + (3,)
