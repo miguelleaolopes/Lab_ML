@@ -1,8 +1,8 @@
 import numpy as np
 import tqdm
 
-y_pred_1 = np.load('data/y_pred_1.npy')
-y_pred_2 = np.load('data/ytest_Classification1.npy')
+y_pred_1 = np.load('data/y_pred.npy')
+y_pred_2 = np.load('data/y_pred_3.npy')
 
 if np.shape(y_pred_1) == np.shape(y_pred_2): same_size = True
 else: same_size = False
@@ -20,7 +20,7 @@ if same_size:
             dif_arr.append(i)
     print('Found', total_dif,'different predictions')  
     print('Different predictions:', total_dif/total_size*100,'%')
-    print(dif_arr)
+    # print(dif_arr)
 
 else: print('Comparisson not made due to different size')
 

@@ -9,6 +9,9 @@ from sklearn.tree import DecisionTreeClassifier
 from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
+from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.image import reconstruct_from_patches_2d, extract_patches_2d
 
 
 kappa_scorer = make_scorer(cohen_kappa_score)
@@ -18,10 +21,12 @@ bca_scorer = make_scorer(balanced_accuracy_score)
 x_import = np.load('data/Xtrain_Classification2.npy')/255.0
 y_import = np.load('data/Ytrain_Classification2.npy')
 
-
+rows = np.shape(x_import)[0]
+x_import_small = x_import[0:int(rows*0.1),:]
+y_import_small= y_import[0:int(rows*0.1)]
 class alternative_model:
 
-    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0, n_neighbors = 0):
+    def __init__(self, model_type='RandomForest', n_splits = 10, class_weight='balanced',kernel='rbf', gamma=0, n_neighbors = 0, manual_random_oversampling = 'None'):
         '''
         model_type -> Specifies the model we want to use
         n_splits -> Necessary for all
@@ -32,25 +37,63 @@ class alternative_model:
         '''
 
 
-
+        
         self.model_type = model_type
         print('Created {} model with {} n_splits'.format(model_type, n_splits))
+        global x_import, y_import
+
+        if manual_random_oversampling == 'RandomOverSampler':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample = RandomOverSampler().fit_resample(x_import, y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+        
+        elif manual_random_oversampling == 'SMOTE':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample = SMOTE().fit_resample(x_import, y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+
+        elif manual_random_oversampling == 'ADASYN':
+            x_import = np.load('data/Xtrain_Classification2.npy')
+            print('Using {} oversampling'.format(manual_random_oversampling))
+            print('Size of original lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            x_resample, y_resample =  ADASYN().fit_resample(x_import,y_import)
+            x_import, y_import = x_resample/255.0, y_resample
+            print('Size of oversampled lists===\nx_import:{}\ny_import:{}'.format(np.shape(x_import),np.shape(y_import)))
+            
+            
+
+
+
         if model_type == 'Balanced Bagging':
-            self.model = BalancedBaggingClassifier()
+            self.model = BalancedBaggingClassifier(
+                sampling_strategy='auto'
+            )
         
         elif model_type == 'Bagging':
             self.model = BaggingClassifier()
         
         elif model_type == 'Random Forest':
-            self.model = RandomForestClassifier(n_estimators=10, class_weight=class_weight)
+            self.model = RandomForestClassifier(
+                n_estimators=10, 
+                class_weight=class_weight
+                )
 
         elif model_type == 'Balanced Random Forest':
-            self.model = BalancedRandomForestClassifier(n_estimators=10, class_weight=class_weight)
+            self.model = BalancedRandomForestClassifier(
+                n_estimators=10, 
+                class_weight=class_weight
+                )
 
         elif model_type == 'svm':
             self.kernel = kernel
             self.gamma = gamma
-            self.model = SVC(kernel=kernel,gamma=gamma)
+            self.model = SVC(kernel=kernel,gamma=gamma,class_weight= 'balanced')
 
         elif model_type == 'Decision Tree':
             self.model = DecisionTreeClassifier()
@@ -78,7 +121,8 @@ class alternative_model:
         if self.cv_type == 'KFold':
             self.cv = KFold(self.n_splits)
             self.scoring = {'accuracy':'accuracy','baccuracy': bca_scorer ,'kappa':kappa_scorer}
-            self.scores = cross_validate(self.model, x_import, y_import , scoring=self.scoring, cv=self.cv, n_jobs=-1)
+            self.scores = cross_validate(self.model, x_import_small, y_import_small , scoring=self.scoring, cv=self.cv, n_jobs=-1,verbose=3)
+            # self.scores = cros_validate(self.model, x_import, y_import , scoring=self.scoring, cv=self.cv, n_jobs=-1)
         
         elif self.cv_type == 'RepeatedStratifiedKFold':
             # Does not support multiclassification
@@ -100,7 +144,7 @@ def find_best_svm_gamma(gammas):
         print('\n\nTesting for gamma {}'.format(gamma))
         modelSVM = alternative_model(
             model_type = 'svm',
-            n_splits = 10,
+            n_splits = 5,
             kernel = 'rbf',
             gamma = gamma
             )
@@ -110,7 +154,7 @@ def find_best_svm_gamma(gammas):
 
     best_b_acu = np.max(b_acu)
     index = np.where(b_acu == best_b_acu)
-    best_gamma = gamma[index]
+    best_gamma = gammas[index]
 
     print('The best gamma for svm is {} with an balanced accuracy of {}'.format(best_gamma, best_b_acu))
 
@@ -122,7 +166,8 @@ def find_best_svm_gamma(gammas):
 
 # modelBB = alternative_model(
 #     model_type ='Balanced Bagging',
-#     n_splits = 15
+#     n_splits = 15,
+#     manual_random_oversampling=True
 #     )
 
 # modelRF = alternative_model(
@@ -131,11 +176,12 @@ def find_best_svm_gamma(gammas):
 #     class_weight='balanced'
 #     )
 
-# modelBRF = alternative_model(
-#     model_type = 'Balanced Random Forest',
-#     n_splits = 15,
-#     class_weight='balanced'
-# )
+modelBRF = alternative_model(
+    model_type = 'Balanced Random Forest',
+    n_splits = 15,
+    class_weight='balanced',
+    manual_random_oversampling='ADASYN'
+)
 
 # modelSVM = alternative_model(
 #     model_type = 'svm',

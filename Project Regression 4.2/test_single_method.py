@@ -8,7 +8,7 @@ from method6_dffits import *
 
 
 
-# m1 = method2_cooks_distance()
+# m1 = method2_cooks_distance(show_plt=True)
 # m1.remove_outliers()
 # m1.test_method()
 
@@ -20,7 +20,7 @@ from method6_dffits import *
 
 m3 = method5_huber_theil()
 m3.find_epsilon()
-# m3.test_method()
+m3.test_method()
 
 
 

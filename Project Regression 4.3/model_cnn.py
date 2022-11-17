@@ -58,7 +58,7 @@ class model:
         plt.legend(loc='lower right')
         if save_img == True:
             plt.savefig("models_acc_epo/model_acc_"+ name + ".png")
-        # plt.show()
+        plt.show()
 
         plt.plot(self.history.history['loss'], label='loss')
         plt.plot(self.history.history['val_loss'], label = 'val_loss')
@@ -68,7 +68,7 @@ class model:
         plt.legend(loc='lower right')
         if save_img == True:    
             plt.savefig("models_loss_epo/model_loss_"+ name + ".png")
-        # plt.show()
+        plt.show()
         
         plt.plot(self.history.history['f1_score'], label='f1_score')
         plt.plot(self.history.history['val_f1_score'], label = 'val_f1_score')
@@ -78,7 +78,7 @@ class model:
         plt.legend(loc='lower right')
         if save_img == True:
             plt.savefig("models_f1score_epo/model_f1score_"+ name + ".png")
-        # plt.show()
+        plt.show()
 
         plt.subplot(1, 3, 1)
         plt.plot(self.history.history['accuracy'], label='accuracy')
